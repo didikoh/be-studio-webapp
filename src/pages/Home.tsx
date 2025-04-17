@@ -1,56 +1,129 @@
 import { Link } from "react-router-dom";
+import { FaPhone } from "react-icons/fa";
+import "./Home.css";
 
 const Home = () => {
   return (
-    <div>
-      {/* Hero Banner */}
-      <section className="bg-gray-100 py-10">
-        <div className="container mx-auto text-center">
-          <h1 className="text-3xl font-bold mb-4">be studio 健身 · 舞蹈 · 美丽</h1>
-          <p className="text-gray-500 mb-6">为你的健康与美丽赋能</p>
-          <img src="/assets/banner.jpg" alt="banner" className="mx-auto rounded-lg" />
+    <div className="student-homepage">
+      <div className="home-card studio-intro-card">
+        <div className="studio-header">
+          <img
+            src="./assets/logo/logo.jpg"
+            alt="logo"
+            className="studio-logo"
+          />
+          <div className="studio-info">
+            <div className="studio-name">Be Studio</div>
+            <div className="studio-contact">联系人：xiaohann</div>
+          </div>
         </div>
-      </section>
+
+        <div className="studio-status">
+          <span className="badge closed">休息中</span>
+          <span className="studio-time">周一至周日 08:00-21:00</span>
+        </div>
+
+        <div className="studio-detail">
+          <div className="studio-detail-left">
+            <div className="studio-phone">
+              联系方式：<span>0123456789</span>{" "}
+            </div>
+            <div className="studio-address">
+              场馆地址：<span>Batu Pahat</span>
+            </div>
+          </div>
+          <div className="studio-detail-right">
+            <button
+              className="phone-icon-btn"
+              onClick={() => window.open("https://wa.me/0123456789", "_blank")}
+            >
+              <FaPhone className="phone-icon" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* mybalance */}
+      <div className="home-card balance-card">
+        <div className="balance-header">我的余额</div>
+        <div className="balance-amount">RM 100.00</div>
+      </div>
+      {/* my appointment */}
+      <div className="home-card appointment-card">
+        <div className="appointment-header">我的预约</div>
+        <div className="appointment-list">
+          <div className="course-card">
+            <img
+              src="/assets/gallery1.jpg"
+              alt="课程背景"
+              className="course-bg"
+            />
+            <div className="course-overlay">
+              <h3 className="course-title">Aerial Music Flow</h3>
+              <p className="course-info">Rui老师 ｜ 空中教室</p>
+              <p className="course-duration">
+                课程时长 <strong>60</strong> 分钟
+              </p>
+              <p className="course-difficulty">
+                课程难度
+                <span className="stars">⭐ ⭐</span>
+              </p>
+              <button className="book-button">立即预约</button>
+              <div className="course-tag">团课</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* courses recommend */}
+      <div className="home-card courses-card">
+        <div className="courses-header">推荐课程</div>
+        <div className="courses-list">
+          <div className="course-card">
+            <img
+              src="/assets/gallery1.jpg"
+              alt="课程背景"
+              className="course-bg"
+            />
+            <div className="course-overlay">
+              <h3 className="course-title">Aerial Music Flow</h3>
+              <p className="course-info">Rui老师 ｜ 空中教室</p>
+              <p className="course-duration">
+                课程时长 <strong>60</strong> 分钟
+              </p>
+              <p className="course-difficulty">
+                课程难度
+                <span className="stars">⭐ ⭐</span>
+              </p>
+              <button className="book-button">立即预约</button>
+              <div className="course-tag">团课</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* 快速入口 */}
-      <section className="py-10">
+      {/* <section className="py-10">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link to="/reserve" className="bg-pink-500 text-white py-6 rounded-lg text-center">
+          <Link
+            to="/reserve"
+            className="bg-pink-500 text-white py-6 rounded-lg text-center"
+          >
             预约课程
           </Link>
-          <Link to="/courses" className="bg-purple-500 text-white py-6 rounded-lg text-center">
+          <Link
+            to="/courses"
+            className="bg-purple-500 text-white py-6 rounded-lg text-center"
+          >
             查看课程
           </Link>
-          <Link to="/account" className="bg-blue-500 text-white py-6 rounded-lg text-center">
+          <Link
+            to="/account"
+            className="bg-blue-500 text-white py-6 rounded-lg text-center"
+          >
             我的账户
           </Link>
         </div>
-      </section>
-
-      {/* be studio 简介 */}
-      <section className="bg-gray-50 py-10">
-        <div className="container mx-auto text-center">
-          <h2 className="text-2xl font-bold mb-4">关于 be studio</h2>
-          <p className="text-gray-600">
-            我们致力于打造舒适的健身、美容、舞蹈课程空间，为每一位客户提供最好的服务体验。
-          </p>
-        </div>
-      </section>
-
-      {/* 图片展示 */}
-      <section className="py-10">
-        <div className="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-2">
-          <img src="/assets/env1.jpg" alt="env" className="rounded-lg" />
-          <img src="/assets/env2.jpg" alt="env" className="rounded-lg" />
-          <img src="/assets/env3.jpg" alt="env" className="rounded-lg" />
-          <img src="/assets/env4.jpg" alt="env" className="rounded-lg" />
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white text-center py-4">
-        © 2025 be studio 版权所有
-      </footer>
+      </section> */}
     </div>
   );
 };
