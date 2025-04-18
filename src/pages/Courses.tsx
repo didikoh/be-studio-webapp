@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import { courses } from "../mocks/courses";
+import { mockCourses } from "../mocks/courses";
 
 const Courses = () => {
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-2xl font-bold mb-6 text-center">课程介绍</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {courses.map((item:any) => (
+        {mockCourses.map((item:any) => (
           <Link
             key={item.id}
             to={`/courses/${item.id}`}

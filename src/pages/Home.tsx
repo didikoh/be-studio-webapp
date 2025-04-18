@@ -100,30 +100,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-
-      {/* 快速入口 */}
-      {/* <section className="py-10">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link
-            to="/reserve"
-            className="bg-pink-500 text-white py-6 rounded-lg text-center"
-          >
-            预约课程
-          </Link>
-          <Link
-            to="/courses"
-            className="bg-purple-500 text-white py-6 rounded-lg text-center"
-          >
-            查看课程
-          </Link>
-          <Link
-            to="/account"
-            className="bg-blue-500 text-white py-6 rounded-lg text-center"
-          >
-            我的账户
-          </Link>
-        </div>
-      </section> */}
     </div>
   );
 };

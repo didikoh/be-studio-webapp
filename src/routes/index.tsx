@@ -5,21 +5,22 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Courses from "../pages/Courses";
 import CourseDetail from "../pages/CourseDetail";
-import Reserve from "../pages/Reserve";
 import Account from "../pages/Account";
 import About from "../pages/About";
+import Schedule from "../pages/Schedule";
 
 
 
 export const router = createBrowserRouter([
+  { path: "/coursedetail", element: <CourseDetail /> },
   {
     element: <DefaultLayout />,
     children: [
       { path: "/", element: <Home /> },
+      { path: "/home", element: <Home /> },
       { path: "/login", element: <Login /> },
       { path: "/courses", element: <Courses /> },
-      { path: "/courses/:id", element: <CourseDetail /> },
-      { path: "/reserve", element: <Reserve /> },
+      { path: "/schedule", element: <Schedule /> },
       { path: "/account", element: <Account /> },
       { path: "/about", element: <About /> },
     ],
