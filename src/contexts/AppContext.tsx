@@ -4,10 +4,13 @@ import { Course } from "../mocks/courses";
 const AppContext = createContext<any>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedCourse, setSelectedCourse] = useState<Course|null>(null);
+  const [user, setUser] = useState<any>("coach"); // "coach" or "user"
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
   return (
-    <AppContext.Provider value={{ selectedCourse, setSelectedCourse }}>
+    <AppContext.Provider
+      value={{ selectedCourse, setSelectedCourse, user, setUser }}
+    >
       {children}
     </AppContext.Provider>
   );

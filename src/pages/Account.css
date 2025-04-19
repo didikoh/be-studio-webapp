@@ -1,0 +1,87 @@
+.account-container {
+    max-width: 420px;
+    margin: 60px auto;
+    padding: 20px;
+    font-family: sans-serif;
+  }
+  
+  .not-logged-in {
+    text-align: center;
+  }
+  
+  .login-link {
+    color: #00b7a2;
+    text-decoration: underline;
+    font-size: 16px;
+  }
+  
+  .account-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+  
+  .account-box {
+    background-color: #f2f2f2;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  
+  .section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  
+  .reservation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .reservation-card {
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .status {
+    font-weight: bold;
+  }
+  
+  .status.已预约 {
+    color: green;
+  }
+  
+  .status.已取消 {
+    color: red;
+  }
+  
+  .status.已完成 {
+    color: #00b7a2;
+  }
+  
+  .logout-button {
+    margin-top: 32px;
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    background-color: #999;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .logout-button:hover {
+    background-color: #777;
+  }
+  

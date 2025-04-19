@@ -180,7 +180,7 @@
     position: absolute;
     inset: 0;
     padding: 16px;
-    background: rgba(0, 180, 180, 0.6); /* 青绿色半透明遮罩 */
+    background: linear-gradient(to right, rgb(119, 7, 95), transparent);
     color: white;
     display: flex;
     flex-direction: column;

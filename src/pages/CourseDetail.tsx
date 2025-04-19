@@ -1,21 +1,48 @@
 import { useAppContext } from "../contexts/AppContext";
 import { MdArrowBack } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./CourseDetail.css";
+import { useNavigate } from "react-router-dom";
+import { FaMinus, FaPlus } from "react-icons/fa";
 
 const CourseDetail = () => {
   const { selectedCourse } = useAppContext();
+  const navigate = useNavigate();
   const [bookpopupVisible, setBookPopupVisible] = useState(false);
   const [bookPeopleCount, setBookPeopleCount] = useState(0);
 
+  const handleBackButtonClick = () => {
+    console.log("Back button clicked");
+    navigate("/schedule");
+  };
+
+  useEffect(() => {}, [bookPeopleCount]);
+
   if (!selectedCourse) {
-    return <div className="detail-loading-container">课程加载中...</div>;
+    return (
+      <div className="detail-loading-container">
+        <button
+          className="back-button"
+          onClick={() => {
+            handleBackButtonClick();
+          }}
+        >
+          <MdArrowBack className="back-icon" />
+        </button>
+        <div>课程加载中...</div>
+      </div>
+    );
   }
 
   return (
     <div className="detail-container">
       <div className="detail-header">
-        <button className="back-button" onClick={() => {}}>
+        <button
+          className="back-button"
+          onClick={() => {
+            handleBackButtonClick();
+          }}
+        >
           <MdArrowBack className="back-icon" />
         </button>
         <div className="detail-header-text">课程详情</div>
@@ -28,7 +55,7 @@ const CourseDetail = () => {
           {" "}
           <div className="course-title-row">
             <h2>{selectedCourse.name}</h2>
-            <span className="course-tag">团课</span>
+            {/* <span className="course-tag">团课</span> */}
             <span className="course-share">🔗 分享</span>
           </div>
           <div className="course-meta">
@@ -73,43 +100,38 @@ const CourseDetail = () => {
             <span>
               今天 {selectedCourse.startTime} - {selectedCourse.endTime}
             </span>
-            <button className="edit-button">🕓 修改时间</button>
           </div>
           <div className="info-row">
             地点：<span>一心工作室</span>
-            <button className="map-button">📍 出发前往</button>
           </div>
           <div className="info-row">
-            支付方式：<span>会员卡预约</span> ✅
-          </div>
-          <div className="info-row">
-            选择会员卡：
-            <select>
-              <option>选择会员卡</option>
-            </select>
+            价格：
+            <span>{selectedCourse.price} 元</span>
           </div>
           <div className="info-row">
             预约人数：
-            <button
-              onClick={() =>
-                setBookPeopleCount(Math.max(0, bookPeopleCount - 1))
-              }
-            >
-              -
-            </button>
-            <span>{bookPeopleCount}</span>
-            <button onClick={() => setBookPeopleCount(bookPeopleCount + 1)}>
-              +
-            </button>
+            <div className="people-count">
+              <button
+                onClick={() =>
+                  setBookPeopleCount(Math.max(0, bookPeopleCount - 1))
+                }
+              >
+                <FaMinus />
+              </button>
+              <span>{bookPeopleCount}</span>
+              <button onClick={() => setBookPeopleCount(bookPeopleCount + 1)}>
+                <FaPlus />
+              </button>
+            </div>
           </div>
-          <div className="info-row">
+          {/* <div className="info-row">
             预约备注：
             <input placeholder="请填写备注" maxLength={200} />
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="detail-footer">
-        <button className="detail-book-button">立即预约</button>
+        <button className="detail-book-button" onClick={() => setBookPopupVisible(true)}>立即预约</button>
       </div>
 
       {bookpopupVisible && (
