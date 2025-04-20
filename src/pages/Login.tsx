@@ -24,15 +24,15 @@ const Login = () => {
       login({ name: "测试用户（教练）", phone });
       setSelectedPage("coach_course")
       setUser("coach");
-      navigate("/coach_account");
+      navigate("/coach_course");
     }else if(phone == "666"){
       login({ name: "测试用户（管理员）", phone });
-      setSelectedPage("home")
+      setSelectedPage("admin_home")
       setUser("admin")
-      navigate("/account");
+      navigate("/admin_home");
     }else{
       login({ name: "测试用户", phone });
-      setSelectedPage("home")
+      setSelectedPage("account")
       setUser("user");
       navigate("/account");
     }

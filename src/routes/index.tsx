@@ -13,6 +13,11 @@ import CoachCourse from "../pages/CoachCourse";
 import CoachCourseDetail from "../pages/CoachCourseDetail";
 import CoachAccount from "../pages/CoachAccount";
 import CoachSite from "../pages/CoachSite";
+import AdminAccount from "../pages/admin/AdminAccount";
+import AdminMember from "../pages/admin/AdminMember";
+import AdminHome from "../pages/admin/AdminHome";
+import AdminTransaction from "../pages/admin/AdminTransaction";
+import AdminSite from "../pages/admin/AdminSite";
 
 export const router = createBrowserRouter([
   { path: "/construction", element: <Construction /> },
@@ -31,6 +36,11 @@ export const router = createBrowserRouter([
       { path: "/coach_course", element: <CoachCourse /> },
       { path: "/coach_site", element: <CoachSite /> },
       { path: "/coach_account", element: <CoachAccount /> },
+      { path: "/admin_account", element: <AdminAccount /> },
+      { path: "/admin_home", element: <AdminHome /> },
+      { path: "/admin_member", element: <AdminMember /> },
+      { path: "/admin_transaction", element: <AdminTransaction /> },
+      { path: "/admin_site", element: <AdminSite /> },
     ],
   },
 ]);

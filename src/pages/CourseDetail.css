@@ -46,6 +46,7 @@
   .detail-content {
     padding: 16px;
     flex: 1;
+    margin-bottom: 62px;
   }
 
   .detail-card {
@@ -214,5 +215,31 @@
     color: #333;
   }
 
+  .booked-students {
+    margin-top: 20px;
+  }
+  
+  .student-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .student-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .cancel-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+  }
   
 }

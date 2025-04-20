@@ -1,4 +1,3 @@
-import React from 'react'
 import { mockCourses } from '../mocks/courses'
 import "./CoachCourse.css"
 import { useNavigate } from 'react-router-dom'

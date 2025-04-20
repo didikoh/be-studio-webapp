@@ -5,9 +5,9 @@ import {
   FaShoppingBag,
   FaUser,
   FaCalendar,
+  FaWallet,
 } from "react-icons/fa";
 import "./BottomNavBar.css";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../contexts/AppContext";
 import { GrYoga } from "react-icons/gr";
@@ -25,12 +25,29 @@ const navItems = [
   { label: "课程", icon: <GrYoga />, value: "coach_course", role: "coach" },
   { label: "场地", icon: <FaCalendar />, value: "coach_site", role: "coach" },
   { label: "账号", icon: <FaUser />, value: "coach_account", role: "coach" },
+
+  { label: "首页", icon: <FaHome />, value: "admin_home", role: "admin" },
+  { label: "会员", icon: <FaCalendar />, value: "admin_member", role: "admin" },
+  {
+    label: "交易",
+    icon: <FaWallet />,
+    value: "admin_transaction",
+    role: "admin",
+  },
+  {
+    label: "场地",
+    icon: <GrYoga />,
+    value: "admin_site",
+    role: "admin",
+  },
+  { label: "账号", icon: <FaUser />, value: "admin_account", role: "admin" },
+
 ];
 
 const BottomNavBar = () => {
   const navigate = useNavigate();
   const { user } = useAppContext();
-  const {selectedPage, setSelectedPage} = useAppContext();
+  const { selectedPage, setSelectedPage } = useAppContext();
 
   return (
     <div className="bottom-nav">

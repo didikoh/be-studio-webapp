@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import dayjs from "dayjs";
 import "./Schedule.css";
 import { mockCourses } from "../mocks/courses";
-import { MdCalendarToday } from "react-icons/md"; // 加在 import 区域
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../contexts/AppContext";
 

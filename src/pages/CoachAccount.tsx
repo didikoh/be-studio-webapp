@@ -1,7 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useUserStore } from "../stores/userStore";
 import { reservations } from "../mocks/reservations";
-import { set } from "date-fns";
 import { useAppContext } from "../contexts/AppContext";
 
 const CoachAccount = () => {

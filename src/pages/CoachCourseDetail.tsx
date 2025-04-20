@@ -1,20 +1,20 @@
-import { FaMinus, FaPlus } from "react-icons/fa";
 import { MdArrowBack } from "react-icons/md";
 import { useAppContext } from "../contexts/AppContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CoachCourseDetail = () => {
   const { selectedCourse } = useAppContext();
   const navigate = useNavigate();
   const [bookpopupVisible, setBookPopupVisible] = useState(false);
-  const [bookPeopleCount, setBookPeopleCount] = useState(0);
+  const [bookedStudents, setBookedStudents] = useState([
+    { id: 1, name: "李小美", phone: "012-3456789" },
+    { id: 2, name: "陈大强", phone: "013-9876543" },
+  ]);
 
   const handleBackButtonClick = () => {
     navigate("/coach_course");
   };
-
-  useEffect(() => {}, [bookPeopleCount]);
 
   if (!selectedCourse) {
     return (
@@ -116,6 +116,33 @@ const CoachCourseDetail = () => {
               预约备注：
               <input placeholder="请填写备注" maxLength={200} />
             </div> */}
+        </div>
+
+        <div className="detail-card booked-students">
+          <h3>已预约学生</h3>
+          {bookedStudents.length === 0 ? (
+            <p>暂无预约</p>
+          ) : (
+            <ul className="student-list">
+              {bookedStudents.map((student) => (
+                <li key={student.id} className="student-row">
+                  <div>
+                    <strong>{student.name}</strong>（{student.phone}）
+                  </div>
+                  <button
+                    className="cancel-btn"
+                    onClick={() =>
+                      setBookedStudents((prev) =>
+                        prev.filter((s) => s.id !== student.id)
+                      )
+                    }
+                  >
+                    取消预约
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
       <div className="detail-footer">

@@ -4,7 +4,7 @@ import { Course } from "../mocks/courses";
 const AppContext = createContext<any>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<any>("coach"); // "coach" or "user"
+  const [user, setUser] = useState<any>("user"); // "coach" or "user"
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [selectedPage, setSelectedPage] = useState("home");
 

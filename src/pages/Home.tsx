@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { FaPhone } from "react-icons/fa";
 import "./Home.css";
 
