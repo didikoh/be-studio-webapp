@@ -1,18 +1,17 @@
-import { useAppContext } from "../contexts/AppContext";
-import { MdArrowBack } from "react-icons/md";
-import { useEffect, useState } from "react";
-import "./CourseDetail.css";
-import { useNavigate } from "react-router-dom";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import { MdArrowBack } from "react-icons/md";
+import { useAppContext } from "../contexts/AppContext";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const CourseDetail = () => {
+const CoachCourseDetail = () => {
   const { selectedCourse } = useAppContext();
   const navigate = useNavigate();
   const [bookpopupVisible, setBookPopupVisible] = useState(false);
   const [bookPeopleCount, setBookPeopleCount] = useState(0);
 
   const handleBackButtonClick = () => {
-    navigate("/schedule");
+    navigate("/coach_course");
   };
 
   useEffect(() => {}, [bookPeopleCount]);
@@ -110,38 +109,33 @@ const CourseDetail = () => {
           <div className="info-row">
             预约人数：
             <div className="people-count">
-              <button
-                onClick={() =>
-                  setBookPeopleCount(Math.max(0, bookPeopleCount - 1))
-                }
-              >
-                <FaMinus />
-              </button>
-              <span>{bookPeopleCount}</span>
-              <button onClick={() => setBookPeopleCount(bookPeopleCount + 1)}>
-                <FaPlus />
-              </button>
+              <span>{selectedCourse.bookedCount}</span>
             </div>
           </div>
           {/* <div className="info-row">
-            预约备注：
-            <input placeholder="请填写备注" maxLength={200} />
-          </div> */}
+              预约备注：
+              <input placeholder="请填写备注" maxLength={200} />
+            </div> */}
         </div>
       </div>
       <div className="detail-footer">
-        <button className="detail-book-button" onClick={() => setBookPopupVisible(true)}>立即预约</button>
+        <button
+          className="detail-book-button"
+          onClick={() => setBookPopupVisible(true)}
+        >
+          开始课程
+        </button>
       </div>
 
       {bookpopupVisible && (
         <div className="book-popup">
           <div className="popup-content">
-            <h2>预约课程</h2>
+            <h2>开始课程</h2>
             <p>课程名称: {selectedCourse.name}</p>
             <p>
               时间: {selectedCourse.startTime} - {selectedCourse.endTime}
             </p>
-            <p>人数: {bookPeopleCount} 人</p>
+            <p>人数: {selectedCourse.bookedCount} 人</p>
             <div className="popup-btns">
               <button onClick={() => {}}>确认</button>
               <button onClick={() => setBookPopupVisible(false)}>关闭</button>
@@ -153,4 +147,4 @@ const CourseDetail = () => {
   );
 };
 
-export default CourseDetail;
+export default CoachCourseDetail;

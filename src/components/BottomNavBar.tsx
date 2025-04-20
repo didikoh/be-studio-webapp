@@ -30,7 +30,7 @@ const navItems = [
 const BottomNavBar = () => {
   const navigate = useNavigate();
   const { user } = useAppContext();
-  const [selectedPage, setSelectedPage] = useState("home");
+  const {selectedPage, setSelectedPage} = useAppContext();
 
   return (
     <div className="bottom-nav">

@@ -1,8 +1,17 @@
 import React from 'react'
 import { mockCourses } from '../mocks/courses'
 import "./CoachCourse.css"
+import { useNavigate } from 'react-router-dom'
+import { useAppContext } from '../contexts/AppContext'
 
 const CoachCourse = () => {
+   const navigate = useNavigate()
+    const { setSelectedCourse } = useAppContext()
+
+   const handleDetail = (course: any) => {
+    setSelectedCourse(course);
+    navigate("/coach_coursedetail")
+   }
   return (
     <div className="c_course-container">
       <div className="c_course-list">
@@ -43,7 +52,7 @@ const CoachCourse = () => {
                   已预约人数：{course.bookedCount}
                 </span>
               </div>
-              <button className="book-button" onClick={() => {}}>立即预约</button>
+              <button className="book-button" onClick={() => {handleDetail(course)}}>课程详细</button>
             </div>
           </div>
         ))}

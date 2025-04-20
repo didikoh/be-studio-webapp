@@ -2,10 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUserStore } from "../stores/userStore";
 import "./Login.css";
+import { useAppContext } from "../contexts/AppContext";
 
 const Login = () => {
   const navigate = useNavigate();
   const login = useUserStore((state: any) => state.login);
+  const { setUser,setSelectedPage } = useAppContext();
 
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -18,11 +20,26 @@ const Login = () => {
     if (!phone) return setError("请输入手机号");
 
     // 模拟登录成功
-    login({ name: "测试用户", phone });
+    if (phone == "888") {
+      login({ name: "测试用户（教练）", phone });
+      setSelectedPage("coach_course")
+      setUser("coach");
+      navigate("/coach_account");
+    }else if(phone == "666"){
+      login({ name: "测试用户（管理员）", phone });
+      setSelectedPage("home")
+      setUser("admin")
+      navigate("/account");
+    }else{
+      login({ name: "测试用户", phone });
+      setSelectedPage("home")
+      setUser("user");
+      navigate("/account");
+    }
     if (rememberMe) {
       localStorage.setItem("rememberPhone", phone);
     }
-    navigate("/account");
+
   };
 
   const handleSendCode = () => {

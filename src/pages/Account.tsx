@@ -2,11 +2,13 @@ import { useNavigate, Link } from "react-router-dom";
 import { useUserStore } from "../stores/userStore";
 import { reservations } from "../mocks/reservations";
 import "./Account.css";
+import { useAppContext } from "../contexts/AppContext";
 
 const Account = () => {
   const user = useUserStore((state: any) => state.user);
   const logout = useUserStore((state: any) => state.logout);
   const navigate = useNavigate();
+  const {setSelectedPage} =useAppContext();
 
   if (!user) {
     return (
@@ -45,6 +47,7 @@ const Account = () => {
         onClick={() => {
           logout();
           navigate("/");
+          setSelectedPage("home");
         }}
         className="logout-button"
       >

@@ -3,18 +3,21 @@ import { useAppContext } from "../contexts/AppContext";
 
 const Construction = () => {
   const navigate = useNavigate();
-  const { user } = useAppContext();
+  const { user,setSelectedPage } = useAppContext();
 
   const handleBack = () => {
     switch (user) {
       case "user":
         navigate("/Home");
+        setSelectedPage("home");
         break;
       case "coach":
         navigate("/coach_course");
+        setSelectedPage("coach_course");
         break;
       default:
         navigate("/Home");
+        setSelectedPage("home");
         break;
     }
   };
