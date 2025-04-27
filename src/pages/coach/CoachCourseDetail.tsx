@@ -1,5 +1,5 @@
 import { MdArrowBack } from "react-icons/md";
-import { useAppContext } from "../contexts/AppContext";
+import { useAppContext } from "../../contexts/AppContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
