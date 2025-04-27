@@ -3,9 +3,7 @@ import { useUserStore } from "../mocks/userStore";
 import { reservations } from "../mocks/reservations";
 import "./Account.css";
 import { useAppContext } from "../contexts/AppContext";
-import { FaUser } from "react-icons/fa";
 import { LuLogOut } from "react-icons/lu";
-import { FcSettings } from "react-icons/fc";
 import { FiSettings } from "react-icons/fi";
 import { useState } from "react";
 import { CgClose } from "react-icons/cg";
@@ -122,7 +120,7 @@ const Account = () => {
         </div>
         <div className="account-couses-list">
           {reservations.map(
-            (item, index) =>
+            (item) =>
               item.status === filterValue && (
                 <div className="course-card">
                   <img

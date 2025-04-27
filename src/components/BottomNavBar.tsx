@@ -11,6 +11,7 @@ import "./BottomNavBar.css";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../contexts/AppContext";
 import { GrYoga } from "react-icons/gr";
+import { MdClass } from "react-icons/md";
 
 const navItems = [
   { label: "首页", icon: <FaHome />, value: "home", role: "user" },
@@ -34,6 +35,7 @@ const navItems = [
     value: "admin_transaction",
     role: "admin",
   },
+  { label: "课程", icon: <MdClass />, value: "admin_course", role: "admin" },
   {
     label: "场地",
     icon: <GrYoga />,
@@ -41,7 +43,6 @@ const navItems = [
     role: "admin",
   },
   { label: "账号", icon: <FaUser />, value: "admin_account", role: "admin" },
-
 ];
 
 const BottomNavBar = () => {

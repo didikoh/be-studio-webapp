@@ -1,4 +1,4 @@
-import { FaCamera, FaFacebook, FaPhone } from "react-icons/fa";
+import { FaFacebook, FaPhone } from "react-icons/fa";
 import "./Home.css";
 import { ImInstagram } from "react-icons/im";
 

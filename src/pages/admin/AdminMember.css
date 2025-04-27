@@ -1,14 +1,60 @@
 .admin-member-container {
   padding: 32px 24px;
-  max-width: 1000px;
+  width: 100%;
   margin: auto;
-  font-family: "Segoe UI", sans-serif;
-  background-color: #fff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-dark);
+  box-sizing: border-box;
+  min-height: 100vh;
 }
 
-.admin-member-container h2 {
+.admin-member-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+}
+
+.admin-member-header-btns {
+  display: flex;
+  gap: 20px;
+  button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    background-color: var(--accent-light);
+  }
+
+  button.active {
+    background-color: var(--accent-color);
+    color: #fff;
+  }
+}
+
+.admin-member-filter {
+  display: flex;
+  gap: 20px;
   margin-bottom: 20px;
-  color: #333;
+  select {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    background-color: #fff;
+    box-sizing: border-box;
+  }
+  input {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+  }
 }
 
 .member-table {
@@ -27,12 +73,8 @@
 }
 
 .member-table th {
-  background-color: #f0f4ff;
+  background-color: var(--tertiary-color);
   color: #333;
-}
-
-.member-table tr:hover {
-  background-color: #f5faff;
 }
 
 .btn {
@@ -108,14 +150,27 @@
   color: #555;
 }
 
+.edit-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  label {
+    width: 10%;
+  }
+}
+
 .popup-card input {
-  width: 100%;
+  width: 90%;
   padding: 8px 10px;
-  margin-bottom: 12px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 6px;
   box-sizing: border-box;
+}
+
+.popup-card.topup input{
+  margin-bottom:20px;
 }
 
 .popup-actions {
@@ -135,6 +190,6 @@
 }
 
 .popup-card p {
-    margin-bottom: 8px;
-    font-size: 14px;
-  }
+  margin-bottom: 8px;
+  font-size: 14px;
+}

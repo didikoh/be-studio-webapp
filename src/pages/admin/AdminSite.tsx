@@ -8,6 +8,7 @@ interface BookingRequest {
   date: string;
   time: string;
   reason: string;
+  site:string;
   status: "待处理" | "已接受" | "已拒绝";
 }
 
@@ -18,6 +19,7 @@ const mockRequests: BookingRequest[] = [
     date: "2025/04/22",
     time: "14:00 - 15:00",
     reason: "希望练习舞蹈",
+    site: "舞蹈室1",
     status: "待处理",
   },
   {
@@ -26,6 +28,7 @@ const mockRequests: BookingRequest[] = [
     date: "2025/04/23",
     time: "10:00 - 11:00",
     reason: "准备比赛训练",
+    site: "舞蹈室2",
     status: "待处理",
   },
 ];
@@ -52,6 +55,7 @@ const AdminSite: React.FC = () => {
             <th>日期</th>
             <th>时间</th>
             <th>理由</th>
+            <th>场地</th>
             <th>状态</th>
             <th>操作</th>
           </tr>
@@ -64,6 +68,7 @@ const AdminSite: React.FC = () => {
               <td>{req.date}</td>
               <td>{req.time}</td>
               <td>{req.reason}</td>
+              <td>{req.site}</td>
               <td>
                 <span
                   className={`status ${

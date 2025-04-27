@@ -20,7 +20,7 @@ export interface Course {
 
 export const mockCourses: Course[] = [
   {
-    id: "course-001",
+    id: "1",
     name: "K-Kardio",
     price: 12,
     capacity: 20,
@@ -37,7 +37,7 @@ export const mockCourses: Course[] = [
     image: "./assets/gallery1.jpg"
   },
   {
-    id: "course-002",
+    id: "2",
     name: "Yin Yoga",
     price: 12,
     capacity: 15,
@@ -54,7 +54,7 @@ export const mockCourses: Course[] = [
     image: "./assets/gallery2.jpg"
   },
   {
-    id: "course-003",
+    id: "3",
     name: "Zumba",
     price: 12,
     capacity: 25,

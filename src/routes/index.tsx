@@ -6,8 +6,6 @@ import Login from "../pages/Login";
 import Courses from "../pages/Courses";
 import CourseDetail from "../pages/CourseDetail";
 import Account from "../pages/Account";
-
-import About from "../pages/About";
 import Schedule from "../pages/Schedule";
 import Construction from "../pages/Construction";
 import CoachCourse from "../pages/coach/CoachCourse";
@@ -21,6 +19,7 @@ import AdminTransaction from "../pages/admin/AdminTransaction";
 import AdminSite from "../pages/admin/AdminSite";
 import Events from "../pages/Events";
 import EventDetail from "../pages/EventDetail";
+import AdminCourse from "../pages/admin/AdminCourse";
 
 export const router = createBrowserRouter([
   { path: "/construction", element: <Construction /> },
@@ -45,6 +44,7 @@ export const router = createBrowserRouter([
       { path: "/admin_member", element: <AdminMember /> },
       { path: "/admin_transaction", element: <AdminTransaction /> },
       { path: "/admin_site", element: <AdminSite /> },
+      { path: "/admin_course", element: <AdminCourse /> },
     ],
   },
 ]);

@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import "./EventDetail.css";
 import { MdArrowBack } from "react-icons/md";
 import { useNavigate } from "react-router-dom";

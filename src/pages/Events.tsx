@@ -1,5 +1,3 @@
-import React from "react";
-import { MdArrowBack } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import "./Events.css";
 import { useAppContext } from "../contexts/AppContext";
