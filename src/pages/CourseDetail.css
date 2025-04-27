@@ -1,6 +1,6 @@
 .detail-container {
   font-family: sans-serif;
-  background-color: #f6f6f6;
+  background-color: var(--background-light);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -8,7 +8,7 @@
   .detail-header {
     display: flex;
     align-items: center;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 1), transparent);
+    background: linear-gradient(to bottom, var(--text-color), transparent);
     position: fixed;
     top: 0;
     color: white;
@@ -129,7 +129,7 @@
 
   .detail-book-button {
     width: 100%;
-    background-color: #00d1b2;
+    background-color: var(--accent-color);
     color: white;
     border: none;
     padding: 14px;
@@ -137,10 +137,6 @@
     border-radius: 999px;
     font-weight: bold;
     cursor: pointer;
-  }
-
-  .detail-book-button:hover {
-    background-color: #00b39c;
   }
 
   .people-count {
@@ -154,14 +150,14 @@
       padding: 3px;
       display: flex;
       border-radius: 5px;
-      background-color: #f6e0f5;
+      background-color: var(--background-dark);
     }
   }
 
   .book-popup {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.4); /* 半透明黑背景 */
+    background-color: var(--overlay-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -206,7 +202,7 @@
   }
   
   .popup-btns button:first-child {
-    background-color: #00d1b2;
+    background-color: var(--accent-color);
     color: white;
   }
   

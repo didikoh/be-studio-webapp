@@ -1,5 +1,6 @@
-import { FaPhone } from "react-icons/fa";
+import { FaCamera, FaFacebook, FaPhone } from "react-icons/fa";
 import "./Home.css";
+import { ImInstagram } from "react-icons/im";
 
 const Home = () => {
   return (
@@ -31,21 +32,40 @@ const Home = () => {
               场馆地址：<span>Batu Pahat</span>
             </div>
           </div>
-          <div className="studio-detail-right">
-            <button
-              className="phone-icon-btn"
-              onClick={() => window.open("https://wa.me/0123456789", "_blank")}
-            >
-              <FaPhone className="phone-icon" />
-            </button>
-          </div>
+        </div>
+
+        <div className="studio-social">
+          <button
+            className="social-icon-btn whatsapp"
+            onClick={() => window.open("https://wa.me/0123456789", "_blank")}
+          >
+            <FaPhone className="social-icon whatsapp" />
+          </button>
+          <button
+            className="social-icon-btn insta"
+            onClick={() => window.open("https://wa.me/0123456789", "_blank")}
+          >
+            <ImInstagram className="social-icon insta" />
+          </button>
+          <button
+            className="social-icon-btn facebook"
+            onClick={() => window.open("https://wa.me/0123456789", "_blank")}
+          >
+            <FaFacebook className="social-icon facebook" />
+          </button>
         </div>
       </div>
 
       {/* mybalance */}
       <div className="home-card balance-card">
-        <div className="balance-header">我的余额</div>
-        <div className="balance-amount">RM 100.00</div>
+        <div className="balance-box">
+          <div className="balance-header">余额</div>
+          <div className="balance-amount">RM 100.00</div>
+        </div>
+        <div className="balance-box right">
+          <div className="balance-header">积分</div>
+          <div className="balance-amount">2</div>
+        </div>
       </div>
       {/* my appointment */}
       <div className="home-card appointment-card">
@@ -59,7 +79,7 @@ const Home = () => {
             />
             <div className="course-overlay">
               <h3 className="course-title">Aerial Music Flow</h3>
-              <p className="course-info">Rui老师 ｜ 空中教室</p>
+              <p className="course-info">R*-ui老师 ｜ 空中教室</p>
               <p className="course-duration">
                 课程时长 <strong>60</strong> 分钟
               </p>

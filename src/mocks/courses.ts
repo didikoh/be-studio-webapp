@@ -12,6 +12,7 @@ export interface Course {
   location: string;
   tags: string[];
   description: string;
+  minCapacity: number; //最少需开班人数
   bookedCount: number;
   difficulty: number; // 1
   image: string; 
@@ -30,6 +31,7 @@ export const mockCourses: Course[] = [
     location: "Studio A",
     tags: ["有氧", "舞蹈", "高强度"],
     description: "K-Kardio 是一项结合了有氧运动和舞蹈元素的课程，旨在提高心肺耐力和全身肌肉力量。课程中将使用多种音乐风格，带来愉悦的锻炼体验。",
+    minCapacity: 10,
     bookedCount: 12,
     difficulty: 3,
     image: "./assets/gallery1.jpg"
@@ -46,6 +48,7 @@ export const mockCourses: Course[] = [
     location: "Studio B",
     tags: ["放松", "伸展", "柔软度"],
     description: "Yin Yoga 是一种静态的瑜伽风格，专注于深层组织和关节的拉伸。课程中将使用长时间保持的姿势，帮助提升身体的柔韧性和放松身心。",
+    minCapacity: 10,
     bookedCount: 8,
     difficulty: 2,
     image: "./assets/gallery2.jpg"
@@ -62,6 +65,7 @@ export const mockCourses: Course[] = [
     location: "Studio A",
     tags: ["舞蹈", "有趣", "燃脂"],
     description: "Zumba 是一种融合了舞蹈和有氧运动的课程，旨在提高身体的动力和身体的燃烧率。课程中将使用多种音乐风格，带来狂欢的舞蹈体验。",
+    minCapacity: 10,
     bookedCount: 22,
     difficulty: 3,
     image: "./assets/gallery3.jpg"

@@ -3,7 +3,7 @@ import  { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./CoachSite.css";
-import { useUserStore } from "../stores/userStore";
+import { useUserStore } from "../mocks/userStore";
 
 const mockAvailableTimes = [
   "09:00 - 10:00",

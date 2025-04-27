@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useUserStore } from "../stores/userStore";
+import { useUserStore } from "../mocks/userStore";
 import "./Login.css";
 import { useAppContext } from "../contexts/AppContext";
 

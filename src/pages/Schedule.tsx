@@ -79,6 +79,11 @@ const Schedule = () => {
                   已预约人数：{course.bookedCount}
                 </span>
               </div>
+              <div className="course-attend">
+                <span className="attend-count">
+                  需开班人数：{course.minCapacity}
+                </span>
+              </div>
               <button className="book-button" onClick={() => {bookBtnClickHandler(course)}}>立即预约</button>
             </div>
           </div>

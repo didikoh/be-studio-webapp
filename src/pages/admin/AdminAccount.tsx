@@ -1,6 +1,6 @@
 import React from "react";
 import "./AdminAccount.css";
-import { useUserStore } from "../../stores/userStore";
+import { useUserStore } from "../../mocks/userStore";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../contexts/AppContext";
 

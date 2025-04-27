@@ -18,7 +18,7 @@ const navItems = [
   {
     label: "活动",
     icon: <FaShoppingBag />,
-    value: "construction",
+    value: "event",
     role: "user",
   },
   { label: "账号", icon: <FaUser />, value: "account", role: "user" },

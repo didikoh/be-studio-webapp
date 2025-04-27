@@ -3,6 +3,7 @@ import { create } from 'zustand'
 type UserInfo = {
   name: string
   phone: string
+  birthday: string
 }
 
 type UserState = {

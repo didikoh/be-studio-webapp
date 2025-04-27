@@ -12,10 +12,29 @@ body {
   width: 100%;
   font-family: "open-sans";
 
-  --primary-color: #d369ce;
-  --secondary-color: #f0f0f0;
-  --text-color: #333;
-  --accent-color: #ff5722;
+  /* 基础色系 */
+  --primary-color: #a89f91; /* 柔和米灰 - 主色调 */
+  --secondary-color: #dcd6cf; /* 暖灰米色 - 次要背景 */
+  --tertiary-color: #f5f3ef; /* 最浅灰米 - 页面背景 */
+
+  /* 文字与线条 */
+  --text-color: #4b463e; /* 深褐文字 */
+  --text-muted: #7f786e; /* 淡文字色 */
+  --border-color: #c5beb3; /* 浅灰棕边框 */
+
+  /* 点缀与按钮 */
+  --accent-color: #b07d62; /* 木色调按钮/高亮 */
+  --accent-light: #d6b8a0; /* 按钮 hover / 背景 */
+  --success-color: #809974; /* 抹茶绿 - 成功信息 */
+  --warning-color: #d8a363; /* 亚麻橘 - 警告 */
+  --error-color: #b66b60; /* 烧砖红 - 错误 */
+
+  /* 状态背景 */
+  --background-light: #f7f6f3; /* 页面浅背景 */
+  --background-dark: #ebe6de; /* 页面深背景 */
+
+  /* 透明层次感 */
+  --overlay-color: rgba(75, 70, 62, 0.45); /* 用于hover遮罩或卡片投影感 */
 }
 
 button {
@@ -33,12 +52,11 @@ button {
   flex-direction: column;
   gap: 50px;
 
-  button{
+  button {
     border: 1px solid var(--primary-color);
     padding: 5px 10px;
     font-size: 1.3rem;
     border-radius: 10px;
     background-color: #fbecfb;
-
   }
 }

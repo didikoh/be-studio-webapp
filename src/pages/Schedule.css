@@ -1,22 +1,24 @@
 .schedule-container {
   width: 100%;
   margin: 0;
-  background-color: rgb(218, 218, 218);
+  background-color: var(--background-dark);
   height: 100%;
   min-height: 100vh;
   padding-bottom: 60px;
+  box-sizing: border-box;
 
   .schedule-card {
     width: 100%;
-    background-color: #ffffff;
+    background-color: var(--background-light);
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
   }
   .schedule-header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     padding: 10px;
+    gap:2px;
   }
   .schedule-calendar-button {
     width: auto;
@@ -29,19 +31,11 @@
     color: #b30988;
   }
 
-  .schedule-container {
-    width: 100%;
-    min-height: 100vh;
-
-    padding: 20px;
-    box-sizing: border-box;
-  }
-
   /* 日期选择条 */
   .date-strip {
     display: flex;
     justify-content: space-between;
-    background-color: white;
+    background-color: var(--tertiary-color);
     border-radius: 12px;
     padding: 10px 12px;
 
@@ -58,14 +52,14 @@
     width: 42px;
     height: 56px;
     border-radius: 10px;
-    background-color: #f2f2f2;
+    background-color: var(--secondary-color);
     cursor: pointer;
-    color: #333;
+    color: var(--text-color);
     flex-shrink: 0;
   }
 
   .date-item.active {
-    background-color: #00b7a2;
+    background-color: var(--text-color);
     color: white;
   }
 
@@ -105,8 +99,8 @@
   .course-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to right, rgba(0, 0, 0, 1), transparent);
-    color: white;
+    background: linear-gradient(to right, var(--secondary-color), transparent);
+    color: var(--text-color);
     padding: 16px;
     display: flex;
     flex-direction: column;
@@ -125,7 +119,7 @@
 
   .course-info {
     font-size: 14px;
-    color: #e0e0e0;
+    color: var(--text-color);
   }
 
   .course-difficulty {
@@ -135,23 +129,24 @@
   }
 
   .star {
-    color: #ccc;
+    color: #000;
     margin-left: 4px;
     font-size: 16px;
   }
 
   .star.filled {
-    color: orange;
+    color: gold
   }
 
   .course-attend {
     font-size: 14px;
-    margin-top: 4px;
   }
 
   .book-button {
-    align-self: flex-end;
-    background-color: #00d1b2;
+    position:absolute;
+    right:15px;
+    bottom: 15px;
+    background-color: var(--accent-color);
     color: white;
     padding: 6px 14px;
     border: none;
@@ -159,9 +154,5 @@
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
-  }
-
-  .book-button:hover {
-    background-color: #00bfa1;
   }
 }
