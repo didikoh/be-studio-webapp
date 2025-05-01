@@ -2,7 +2,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import DefaultLayout from "../layouts/DefaultLayout";
 import Home from "../pages/Home";
-import Login from "../pages/Login";
+import Login from "../pages/auth/Login";
 import Courses from "../pages/Courses";
 import CourseDetail from "../pages/CourseDetail";
 import Account from "../pages/Account";
@@ -20,11 +20,15 @@ import AdminSite from "../pages/admin/AdminSite";
 import Events from "../pages/Events";
 import EventDetail from "../pages/EventDetail";
 import AdminCourse from "../pages/admin/AdminCourse";
+import Register from "../pages/auth/Register";
+import ForgetPassword from "../pages/auth/ForgetPassword";
 
 export const router = createBrowserRouter([
   { path: "/construction", element: <Construction /> },
   { path: "/coursedetail", element: <CourseDetail /> },
   { path: "/login", element: <Login /> },
+  { path: "/register", element: <Register /> },
+  { path: "/forget_password", element: <ForgetPassword /> },
   { path: "/coach_coursedetail", element: <CoachCourseDetail /> },
   { path: "/eventdetail", element: <EventDetail /> },
   {

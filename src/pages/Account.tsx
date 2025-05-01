@@ -7,6 +7,8 @@ import { LuLogOut } from "react-icons/lu";
 import { FiSettings } from "react-icons/fi";
 import { useState } from "react";
 import { CgClose } from "react-icons/cg";
+import AccountSetting from "../components/AccountSetting";
+import { PiPen } from "react-icons/pi";
 
 const Account = () => {
   const user = useUserStore((state: any) => state.user);
@@ -15,6 +17,7 @@ const Account = () => {
   const { setSelectedPage } = useAppContext();
   const [filterValue, setFilterValue] = useState("Booked");
   const [ruleOpen, setRuleOpen] = useState(false);
+  const [settingOpen, setSettingOpen] = useState(false);
 
   const filters = [
     { name: "已预约", value: "Booked" },
@@ -51,9 +54,12 @@ const Account = () => {
         <div className="account-dashboard-btns">
           <button
             className="account-dashboard-btn"
-            onClick={() => navigate("/account")}
+            onClick={() => {
+              console.log(settingOpen);
+              setSettingOpen(true);
+            }}
           >
-            <FiSettings className="logout-icon" />
+            <PiPen />
           </button>
           <button
             className="account-dashboard-btn"
@@ -63,7 +69,7 @@ const Account = () => {
               setSelectedPage("home");
             }}
           >
-            <LuLogOut className="logout-icon" />
+            <LuLogOut />
           </button>
         </div>
       </div>
@@ -172,6 +178,8 @@ const Account = () => {
           </div>
         </div>
       )}
+
+      {settingOpen && <AccountSetting setSettingOpen={setSettingOpen} />}
     </div>
   );
 };

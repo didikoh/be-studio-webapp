@@ -4,6 +4,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  gap:10px;
   background-color: var(--primary-color);
 
   .login-content {
@@ -34,7 +36,7 @@
   .login-form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 15px;
   }
 
   .login-input {
@@ -44,6 +46,8 @@
     border: 1px solid var(--tertiary-color);
     outline: none;
     transition: border-color 0.2s;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .login-input:focus {
@@ -64,7 +68,7 @@
 
   .login-code-row {
     display: flex;
-    gap: 8px;
+    gap: 15px;
   }
 
   .code-input {
@@ -81,10 +85,31 @@
     cursor: pointer;
   }
   
-  .remember-me {
-    font-size: 14px;
+  .form-bottom-row{
     display: flex;
-    align-items: center;
-    gap: 6px;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color:var(--text-color)
+  }
+
+  .forget-password-text{
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+  }
+
+  .register-text{
+    text-decoration: underline;
+    font-style: italic;
+  }
+  
+  .remember-me {
+    display: flex;
+    gap: 2px;
+  }
+
+  .login-button.register{
+    background-color: var(--error-color);
+    
   }
 }

@@ -1,120 +1,170 @@
 import { FaFacebook, FaPhone } from "react-icons/fa";
-import "./Home.css";
+import clsx from "clsx";
+import homeStyle from "./Home.module.css";
 import { ImInstagram } from "react-icons/im";
 
 const Home = () => {
   return (
-    <div className="student-homepage">
-      <div className="home-card studio-intro-card">
-        <div className="studio-header">
+    <div className={homeStyle["student-homepage"]}>
+      <div className={clsx(homeStyle["home-card"], homeStyle["studio-intro-card"])}>
+        <div className={homeStyle["studio-header"]}>
           <img
             src="./assets/logo/logo.jpg"
             alt="logo"
-            className="studio-logo"
+            className={homeStyle["studio-logo"]}
           />
-          <div className="studio-info">
-            <div className="studio-name">Be Studio</div>
-            <div className="studio-contact">联系人：xiaohann</div>
+          <div className={homeStyle["studio-info"]}>
+            <div className={homeStyle["studio-name"]}>
+              Be Studio
+            </div>
+            <div className={homeStyle["studio-contact"]}>
+              联系人：xiaohann
+            </div>
           </div>
         </div>
 
-        <div className="studio-status">
-          <span className="badge closed">休息中</span>
-          <span className="studio-time">周一至周日 08:00-21:00</span>
+        <div className={homeStyle["studio-status"]}>
+          <span className={clsx(homeStyle["badge"], homeStyle["closed"])}>
+            休息中
+          </span>
+          <span className={homeStyle["studio-time"]}>
+            周一至周日 08:00-21:00
+          </span>
         </div>
 
-        <div className="studio-detail">
-          <div className="studio-detail-left">
-            <div className="studio-phone">
-              联系方式：<span>0123456789</span>{" "}
+        <div className={homeStyle["studio-detail"]}>
+          <div className={homeStyle["studio-detail-left"]}>
+            <div className={homeStyle["studio-phone"]}>
+              联系方式：<span>0123456789</span>
             </div>
-            <div className="studio-address">
+            <div className={homeStyle["studio-address"]}>
               场馆地址：<span>Batu Pahat</span>
             </div>
           </div>
         </div>
 
-        <div className="studio-social">
+        <div className={homeStyle["studio-social"]}>
           <button
-            className="social-icon-btn whatsapp"
+            className={clsx(
+              homeStyle["social-icon-btn"],
+              homeStyle["whatsapp"]
+            )}
             onClick={() => window.open("https://wa.me/0123456789", "_blank")}
           >
-            <FaPhone className="social-icon whatsapp" />
+            <FaPhone className={homeStyle["social-icon"]} />
           </button>
           <button
-            className="social-icon-btn insta"
+            className={clsx(
+              homeStyle["social-icon-btn"],
+              homeStyle["insta"]
+            )}
             onClick={() => window.open("https://wa.me/0123456789", "_blank")}
           >
-            <ImInstagram className="social-icon insta" />
+            <ImInstagram className={homeStyle["social-icon"]} />
           </button>
           <button
-            className="social-icon-btn facebook"
+            className={clsx(
+              homeStyle["social-icon-btn"],
+              homeStyle["facebook"]
+            )}
             onClick={() => window.open("https://wa.me/0123456789", "_blank")}
           >
-            <FaFacebook className="social-icon facebook" />
+            <FaFacebook className={homeStyle["social-icon"]} />
           </button>
         </div>
       </div>
 
       {/* mybalance */}
-      <div className="home-card balance-card">
-        <div className="balance-box">
-          <div className="balance-header">余额</div>
-          <div className="balance-amount">RM 100.00</div>
+      <div className={clsx(homeStyle["home-card"], homeStyle["balance-card"])}>
+        <div className={homeStyle["balance-box"]}>
+          <div className={homeStyle["balance-header"]}>
+            余额
+          </div>
+          <div className={homeStyle["balance-amount"]}>
+            RM 100.00
+          </div>
         </div>
-        <div className="balance-box right">
-          <div className="balance-header">积分</div>
-          <div className="balance-amount">2</div>
+        <div className={clsx(homeStyle["balance-box"], homeStyle["right"])}>
+          <div className={homeStyle["balance-header"]}>
+            积分
+          </div>
+          <div className={homeStyle["balance-amount"]}>
+            2
+          </div>
         </div>
       </div>
       {/* my appointment */}
-      <div className="home-card appointment-card">
-        <div className="appointment-header">我的预约</div>
-        <div className="appointment-list">
-          <div className="course-card">
+      <div className={clsx(homeStyle["home-card"], homeStyle["appointment-card"])}>
+        <div className={homeStyle["appointment-header"]}>
+          我的预约
+        </div>
+        <div className={homeStyle["appointment-list"]}>
+          <div className={homeStyle["course-card"]}>
             <img
               src="/assets/gallery1.jpg"
               alt="课程背景"
-              className="course-bg"
+              className={homeStyle["course-bg"]}
             />
-            <div className="course-overlay">
-              <h3 className="course-title">Aerial Music Flow</h3>
-              <p className="course-info">R*-ui老师 ｜ 空中教室</p>
-              <p className="course-duration">
+            <div className={homeStyle["course-overlay"]}>
+              <h3 className={homeStyle["course-title"]}>
+                Aerial Music Flow
+              </h3>
+              <p className={homeStyle["course-info"]}>
+                Rui老师 ｜ 空中教室
+              </p>
+              <p className={homeStyle["course-duration"]}>
                 课程时长 <strong>60</strong> 分钟
               </p>
-              <p className="course-difficulty">
+              <p className={homeStyle["course-difficulty"]}>
                 课程难度
-                <span className="stars">⭐ ⭐</span>
+                <span className={homeStyle["stars"]}>
+                  ⭐ ⭐
+                </span>
               </p>
-              <button className="book-button">立即预约</button>
-              <div className="course-tag">团课</div>
+              <button className={homeStyle["book-button"]}>
+                立即预约
+              </button>
+              <div className={homeStyle["course-tag"]}>
+                团课
+              </div>
             </div>
           </div>
         </div>
       </div>
       {/* courses recommend */}
-      <div className="home-card courses-card">
-        <div className="courses-header">推荐课程</div>
-        <div className="courses-list">
-          <div className="course-card">
+      <div className={clsx(homeStyle["home-card"], homeStyle["courses-card"])}>
+        <div className={homeStyle["courses-header"]}>
+          推荐课程
+        </div>
+        <div className={homeStyle["courses-list"]}>
+          <div className={homeStyle["course-card"]}>
             <img
               src="/assets/gallery1.jpg"
               alt="课程背景"
-              className="course-bg"
+              className={homeStyle["course-bg"]}
             />
-            <div className="course-overlay">
-              <h3 className="course-title">Aerial Music Flow</h3>
-              <p className="course-info">Rui老师 ｜ 空中教室</p>
-              <p className="course-duration">
+            <div className={homeStyle["course-overlay"]}>
+              <h3 className={homeStyle["course-title"]}>
+                Aerial Music Flow
+              </h3>
+              <p className={homeStyle["course-info"]}>
+                Rui老师 ｜ 空中教室
+              </p>
+              <p className={homeStyle["course-duration"]}>
                 课程时长 <strong>60</strong> 分钟
               </p>
-              <p className="course-difficulty">
+              <p className={homeStyle["course-difficulty"]}>
                 课程难度
-                <span className="stars">⭐ ⭐</span>
+                <span className={homeStyle["stars"]}>
+                  ⭐ ⭐
+                </span>
               </p>
-              <button className="book-button">立即预约</button>
-              <div className="course-tag">团课</div>
+              <button className={homeStyle["book-button"]}>
+                立即预约
+              </button>
+              <div className={homeStyle["course-tag"]}>
+                团课
+              </div>
             </div>
           </div>
         </div>
@@ -124,3 +174,4 @@ const Home = () => {
 };
 
 export default Home;
+
