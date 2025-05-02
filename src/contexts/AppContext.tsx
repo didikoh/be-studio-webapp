@@ -1,13 +1,41 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Course } from "../mocks/courses";
+import axios from "axios";
 
 const AppContext = createContext<any>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<any>("user"); // "coach" or "user"
+  const [user, setUser] = useState<any>(null);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectedPage, setSelectedPage] = useState("home");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/auth-check.php`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setUser(res.data.profile);
+      })
+      .catch(() => setUser(null));
+    // .finally(() => setIsLoading(false));
+  }, []);
+
+  const logout = async () => {
+    await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth-logout.php`, {
+      withCredentials: true,
+    });
+    setUser(null);
+  };
 
   return (
     <AppContext.Provider
@@ -19,7 +47,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         selectedPage,
         setSelectedPage,
         selectedEvent,
-        setSelectedEvent
+        setSelectedEvent,
+        logout,
+        loading,
+        setLoading,
       }}
     >
       {children}

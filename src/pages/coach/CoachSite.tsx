@@ -21,7 +21,6 @@ const CoachSite = () => {
   const [selectedSite, setSelectedSite] = useState<string | null>(null);
   const [popupVisible, setPopupVisible] = useState(false);
   const [reason, setReason] = useState("");
-  const user = useUserStore((state: any) => state.user);
 
   const handleTimeClick = (time: string) => {
     setSelectedTime(time);

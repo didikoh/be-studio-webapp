@@ -8,10 +8,9 @@ import { LuLogOut } from "react-icons/lu";
 import { CgClose } from "react-icons/cg";
 
 const CoachAccount = () => {
-  const user = useUserStore((state: any) => state.user);
   const logout = useUserStore((state: any) => state.logout);
   const navigate = useNavigate();
-  const { setSelectedPage } = useAppContext();
+  const { setUserRole,setSelectedPage } = useAppContext();
   const [filterValue, setFilterValue] = useState("Booked");
   const [ruleOpen, setRuleOpen] = useState(false);
 
@@ -60,6 +59,7 @@ const CoachAccount = () => {
               logout();
               navigate("/");
               setSelectedPage("home");
+              setUserRole("student");
             }}
           >
             <LuLogOut className="logout-icon" />

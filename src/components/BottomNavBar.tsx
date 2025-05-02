@@ -14,15 +14,15 @@ import { GrYoga } from "react-icons/gr";
 import { MdClass } from "react-icons/md";
 
 const navItems = [
-  { label: "首页", icon: <FaHome />, value: "home", role: "user" },
-  { label: "预约", icon: <FaClock />, value: "schedule", role: "user" },
+  { label: "首页", icon: <FaHome />, value: "home", role: "student" },
+  { label: "预约", icon: <FaClock />, value: "schedule", role: "student" },
   {
     label: "活动",
     icon: <FaShoppingBag />,
     value: "event",
-    role: "user",
+    role: "student",
   },
-  { label: "账号", icon: <FaUser />, value: "account", role: "user" },
+  { label: "账号", icon: <FaUser />, value: "account", role: "student" },
   { label: "课程", icon: <GrYoga />, value: "coach_course", role: "coach" },
   { label: "场地", icon: <FaCalendar />, value: "coach_site", role: "coach" },
   { label: "账号", icon: <FaUser />, value: "coach_account", role: "coach" },
@@ -54,7 +54,7 @@ const BottomNavBar = () => {
     <div className="bottom-nav">
       {navItems.map(
         (item, index) =>
-          item.role === user && (
+          (user ? user.role : "student") === item.role && (
             <div
               key={index}
               className={`nav-item ${

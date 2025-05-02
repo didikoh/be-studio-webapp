@@ -312,3 +312,9 @@
   object-fit: cover;
   display: block;
 }
+
+.join-us{
+  font-style: italic;
+  color: var(--accent-color);
+  text-decoration: underline;
+}

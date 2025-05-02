@@ -1,70 +1,110 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useUserStore } from "../../mocks/userStore";
-import "./Login.css";
+import styles from "./Login.module.css";
 import { useAppContext } from "../../contexts/AppContext";
+import { isValidPhoneNumber } from "react-phone-number-input";
+import PhoneInput from "react-phone-number-input/input";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
-  const login = useUserStore((state: any) => state.login);
   const { setUser, setSelectedPage } = useAppContext();
 
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone) return setError("请输入手机号");
+
+    if (!isValidPhoneNumber(phone)) {
+      alert("请输入正确的电话号码！");
+      return;
+    }
+
+    if (password.length < 8) {
+      alert("密码至少8位，请重新输入");
+      return;
+    }
+
+    console.log("登录提交：", { phone, password });
+
+    const formData = new FormData();
+    formData.append("phone", phone);
+    formData.append("password", password);
+
+    try {
+      const res = await axios.post(`${baseUrl}/auth-login.php`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true  // ✅ 必须加这个，才能存 session
+      });
+
+      console.log(res.data);
+
+      if (res.data.success) {
+        setUser(res.data.profile);
+      }else{
+        setError(res.data.message);
+      }
+
+    } catch (err: any) {
+      setError(err.message);
+      console.error(err);
+    }
+
+
 
     // 模拟登录成功
-    if (phone == "888") {
-      login({ name: "测试用户（教练）", phone });
-      setSelectedPage("coach_course");
-      setUser("coach");
-      navigate("/coach_course");
-    } else if (phone == "666") {
-      login({ name: "测试用户（管理员）", phone });
-      setSelectedPage("admin_home");
-      setUser("admin");
-      navigate("/admin_home");
-    } else {
-      login({ name: "测试用户", phone });
-      setSelectedPage("account");
-      setUser("user");
-      navigate("/account");
-    }
-    if (rememberMe) {
-      localStorage.setItem("rememberPhone", phone);
-    }
+    // if (phone == "888") {
+    //   login({ name: "测试用户（教练）", phone });
+    //   setSelectedPage("coach_course");
+    //   setUser("coach");
+    //   navigate("/coach_course");
+    // } else if (phone == "666") {
+    //   login({ name: "测试用户（管理员）", phone });
+    //   setSelectedPage("admin_home");
+    //   setUser("admin");
+    //   navigate("/admin_home");
+    // } else {
+    //   login({ name: "测试用户", phone });
+    //   setSelectedPage("account");
+    //   setUser("user");
+    //   navigate("/account");
+    // }
+    // if (rememberMe) {
+    //   localStorage.setItem("rememberPhone", phone);
+    // }
   };
 
   return (
-    <div className="login-container">
-      <div className="login-content">
-        <h1 className="login-title">登录 be studio</h1>
-        {error && <div className="login-error">{error}</div>}
-        <form onSubmit={handleLogin} className="login-form">
-          <input
-            type="text"
-            placeholder="请输入手机号"
+    <div className={styles["login-container"]}>
+      <div className={styles["login-content"]}>
+        <h1 className={styles["login-title"]}>登录 be studio</h1>
+        {error && <div className={styles["login-error"]}>{error}</div>}
+        <form onSubmit={handleLogin} className={styles["login-form"]}>
+          <PhoneInput
+            placeholder="电话号码"
+            defaultCountry="MY"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="login-input"
+            onChange={(value) => setPhone(value || "")}
+            className={styles["login-input"]}
+            required
           />
-          <div className="form-bottom-row">
+          <div className={styles["form-bottom-row"]}>
             <input
               type="password"
-              placeholder="密码 (测试账号无密码)"
+              placeholder="密码 "
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="login-input"
+              className={styles["login-input"]}
+              required
             />
           </div>
 
-          <div className="form-bottom-row">
-            <label className="remember-me">
+          <div className={styles["form-bottom-row"]}>
+            <label className={styles["remember-me"]}>
               <input
                 type="checkbox"
                 checked={rememberMe}
@@ -73,7 +113,7 @@ const Login = () => {
               记住我
             </label>{" "}
             <span
-              className="register-text"
+              className={styles["register-text"]}
               onClick={() => navigate("/register")}
               role="button"
               tabIndex={0}
@@ -81,12 +121,12 @@ const Login = () => {
               欢迎加入我们！点此注册
             </span>
           </div>
-          <button type="submit" className="login-button">
+          <button type="submit" className={styles["login-button"]}>
             登录
           </button>
-          <div className="form-bottom-row">
+          <div className={styles["form-bottom-row"]}>
             <span
-              className="forget-password-text"
+              className={styles["forget-password-text"]}
               onClick={() => navigate("/forget_password")}
               role="button"
               tabIndex={0}

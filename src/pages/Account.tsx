@@ -1,20 +1,17 @@
 import { useNavigate, Link } from "react-router-dom";
-import { useUserStore } from "../mocks/userStore";
 import { reservations } from "../mocks/reservations";
-import "./Account.css";
+import styles from "./Account.module.css";
 import { useAppContext } from "../contexts/AppContext";
 import { LuLogOut } from "react-icons/lu";
-import { FiSettings } from "react-icons/fi";
 import { useState } from "react";
 import { CgClose } from "react-icons/cg";
 import AccountSetting from "../components/AccountSetting";
 import { PiPen } from "react-icons/pi";
+import clsx from "clsx";
 
 const Account = () => {
-  const user = useUserStore((state: any) => state.user);
-  const logout = useUserStore((state: any) => state.logout);
   const navigate = useNavigate();
-  const { setSelectedPage } = useAppContext();
+  const { user, logout, setSelectedPage } = useAppContext();
   const [filterValue, setFilterValue] = useState("Booked");
   const [ruleOpen, setRuleOpen] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
@@ -28,10 +25,10 @@ const Account = () => {
 
   if (!user) {
     return (
-      <div className="account-container not-logged-in">
-        <div className="account-box">
+      <div className={clsx(styles["account-container"], styles["not-logged-in"])}>
+        <div className={styles["account-box"]}>
           <p>尚未登录</p>
-          <Link to="/login" className="login-link">
+          <Link to="/login" className={styles["login-link"]}>
             去登录
           </Link>
         </div>
@@ -39,21 +36,30 @@ const Account = () => {
     );
   }
 
+  const joinUs = () => {
+    const phone = "60177615676"; // 改成你自己的手机号（马来西亚手机号前面加60）
+    const message = "你好，我想加入会员";
+    const encodedMessage = encodeURIComponent(message);
+    const url = `https://wa.me/${phone}?text=${encodedMessage}`;
+
+    window.open(url, "_blank");
+  };
+
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <div className="user-info">
-          <div className="avatar"></div>
-          <div className="login-text">
+    <div className={styles["dashboard-container"]}>
+      <div className={styles["dashboard-header"]}>
+        <div className={styles["user-info"]}>
+          <div className={styles["avatar"]}></div>
+          <div className={styles["login-text"]}>
             {user.name}
             <br />
             <span>{user.phone}</span>
           </div>
         </div>
 
-        <div className="account-dashboard-btns">
+        <div className={styles["account-dashboard-btns"]}>
           <button
-            className="account-dashboard-btn"
+            className={styles["account-dashboard-btn"]}
             onClick={() => {
               console.log(settingOpen);
               setSettingOpen(true);
@@ -62,11 +68,9 @@ const Account = () => {
             <PiPen />
           </button>
           <button
-            className="account-dashboard-btn"
-            onClick={() => {
-              logout();
-              navigate("/");
-              setSelectedPage("home");
+            className={styles["account-dashboard-btn"]}
+            onClick={async () => {
+              await logout();
             }}
           >
             <LuLogOut />
@@ -74,32 +78,43 @@ const Account = () => {
         </div>
       </div>
 
-      <div className="account-stats-section">
-        <div className="stat-item">
-          <div className="stat-label">我的余额</div>
-          <div className="stat-value">RM100</div>
+      <div className={styles["account-stats-section"]}>
+        <div className={styles["stat-item"]}>
+          <div className={styles["stat-label"]}>我的余额</div>
+          <div className={styles["stat-value"]}>RM {user.balance}</div>
         </div>
-        <div className="stat-item right">
-          <div className="stat-label">我的积分</div>
-          <div className="stat-value">0</div>
-        </div>
-      </div>
-
-      <div className="account-stats-section">
-        <div className="stat-item ">
-          <div className="stat-label">会员截至</div>
-          <div className="stat-value">2025-12-31</div>
-        </div>
-        <div className="stat-item right">
-          <div className="stat-label">本周学习</div>
-          <div className="stat-value">0分钟</div>
+        <div className={clsx(styles["stat-item"], styles["right"])}>
+          <div className={styles["stat-label"]}>我的积分</div>
+          <div className={styles["stat-value"]}>{user.point}</div>
         </div>
       </div>
 
-      <div className="account-stats-section rule">
-        <div className="stat-item rule">
+      <div className={styles["account-stats-section"]}>
+        <div className={styles["stat-item"]}>
+          {user.member ? (
+            <>
+              <div className={styles["stat-label"]}>会员截至</div>
+              <div className={styles["stat-value"]}>{user.expire_date}</div>
+            </>
+          ) : (
+            <>
+              <div className={styles["stat-label"]}>不是会员？</div>
+              <div className={clsx(styles["stat-value"],styles["join-us"])} onClick={joinUs}>
+                加入我们
+              </div>
+            </>
+          )}
+        </div>
+        <div className={clsx(styles["stat-item"], styles["right"])}>
+          <div className={styles["stat-label"]}>本周学习</div>
+          <div className={styles["stat-value"]}>0分钟</div>
+        </div>
+      </div>
+
+      <div className={clsx(styles["account-stats-section"], styles["rule"])}>
+        <div className={clsx(styles["stat-item"], styles["rule"])}>
           <div
-            className="stat-value rule"
+            className={clsx(styles["stat-value"], styles["rule"])}
             onClick={() => {
               setRuleOpen(true);
             }}
@@ -109,14 +124,14 @@ const Account = () => {
         </div>
       </div>
 
-      <div className="account-couses-section">
-        <div className="account-couses-strip">
+      <div className={styles["account-couses-section"]}>
+        <div className={styles["account-couses-strip"]}>
           {filters.map((item, index) => (
             <button
-              className={
-                "account-couses-filter" +
-                (filterValue === item.value ? " active" : "")
-              }
+              className={clsx(
+                styles["account-couses-filter"],
+                filterValue === item.value && styles["active"]
+              )}
               key={index}
               onClick={() => setFilterValue(item.value)}
             >
@@ -124,28 +139,28 @@ const Account = () => {
             </button>
           ))}
         </div>
-        <div className="account-couses-list">
+        <div className={styles["account-couses-list"]}>
           {reservations.map(
             (item) =>
               item.status === filterValue && (
-                <div className="course-card">
+                <div className={styles["course-card"]} key={item.id}>
                   <img
                     src="/assets/gallery1.jpg"
                     alt="课程背景"
-                    className="course-bg"
+                    className={styles["course-bg"]}
                   />
-                  <div className="course-overlay">
-                    <h3 className="course-title">Aerial Music Flow</h3>
-                    <p className="course-info">R*-ui老师 ｜ 空中教室</p>
-                    <p className="course-duration">
+                  <div className={styles["course-overlay"]}>
+                    <h3 className={styles["course-title"]}>Aerial Music Flow</h3>
+                    <p className={styles["course-info"]}>R*-ui老师 ｜ 空中教室</p>
+                    <p className={styles["course-duration"]}>
                       课程时长 <strong>60</strong> 分钟
                     </p>
-                    <p className="course-difficulty">
+                    <p className={styles["course-difficulty"]}>
                       课程难度
-                      <span className="stars">⭐ ⭐</span>
+                      <span className={styles["stars"]}>⭐ ⭐</span>
                     </p>
-                    <button className="book-button">立即预约</button>
-                    <div className="course-tag">团课</div>
+                    <button className={styles["book-button"]}>立即预约</button>
+                    <div className={styles["course-tag"]}>团课</div>
                   </div>
                 </div>
               )
@@ -153,15 +168,15 @@ const Account = () => {
         </div>
       </div>
 
-      <div className="footer-text">
+      <div className={styles["footer-text"]}>
         Be Studio 2025 All Rights Reserved
         <br />
       </div>
 
       {ruleOpen && (
-        <div className="rule-overlay">
-          <div className="rule-container">
-            <span className="rule-text">
+        <div className={styles["rule-overlay"]}>
+          <div className={styles["rule-container"]}>
+            <span className={styles["rule-text"]}>
               会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
               会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
               会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
@@ -170,10 +185,10 @@ const Account = () => {
               会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,{" "}
             </span>
             <button
-              className="close-rule-button"
+              className={styles["close-rule-button"]}
               onClick={() => setRuleOpen(false)}
             >
-              <CgClose className="close-icon" />
+              <CgClose className={styles["close-icon"]} />
             </button>
           </div>
         </div>
@@ -185,3 +200,4 @@ const Account = () => {
 };
 
 export default Account;
+

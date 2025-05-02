@@ -1,52 +1,48 @@
 import React from "react";
-import "./AdminAccount.css";
-import { useUserStore } from "../../mocks/userStore";
+import styles from "./AdminAccount.module.css";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../contexts/AppContext";
+import clsx from "clsx";
 
 const AdminAccount: React.FC = () => {
-  const logout = useUserStore((state: any) => state.logout);
   const navigate = useNavigate();
-  const { setSelectedPage, setUser } = useAppContext();
+  const { user, logout, setSelectedPage } = useAppContext();
 
-  const mockAdmin = {
-    name: "Admin 用户",
-    email: "admin@example.com",
-    role: "管理员",
-    joinDate: "2024-12-01",
-  };
+  if (user == null) {
+    return <div>请先登录</div>;
+  }
 
   return (
-    <div className="admin-account-container">
+    <div className={styles["admin-account-container"]}>
       <h2>我的账号</h2>
 
-      <div className="account-card">
+      <div className={styles["account-card"]}>
         <p>
           <strong>姓名：</strong>
-          {mockAdmin.name}
+          {user.name}
         </p>
         <p>
-          <strong>登录账号：</strong>
-          {mockAdmin.email}
+          <strong>手机号：</strong>
+          {user.phone}
         </p>
         <p>
           <strong>权限等级：</strong>
-          {mockAdmin.role}
-        </p>
-        <p>
-          <strong>加入时间：</strong>
-          {mockAdmin.joinDate}
+          {user.level == 1 ? "最高权限" : "普通权限"}
         </p>
 
-        <div className="account-actions">
-          <button className="btn change">修改密码</button>
+        <div className={clsx(styles["account-actions"])}>
           <button
-            className="btn logout"
+            className={clsx(styles["btn"], styles["change"])}
+            onClick={() => {
+              setSelectedPage("change_password");
+            }}
+          >
+            修改密码
+          </button>
+          <button
+            className={clsx(styles["btn"], styles["logout"])}
             onClick={() => {
               logout();
-              navigate("/");
-              setSelectedPage("home");
-              setUser("user");
             }}
           >
             退出登录
@@ -58,3 +54,4 @@ const AdminAccount: React.FC = () => {
 };
 
 export default AdminAccount;
+
