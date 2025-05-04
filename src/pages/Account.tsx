@@ -49,7 +49,9 @@ const Account = () => {
     <div className={styles["dashboard-container"]}>
       <div className={styles["dashboard-header"]}>
         <div className={styles["user-info"]}>
-          <div className={styles["avatar"]}></div>
+          <div className={styles["avatar"]}>
+            <img src={import.meta.env.VITE_API_BASE_URL + user.profile_pic} alt="avatar" />
+          </div>
           <div className={styles["login-text"]}>
             {user.name}
             <br />

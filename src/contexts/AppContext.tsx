@@ -16,22 +16,23 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectedPage, setSelectedPage] = useState("home");
   const [loading, setLoading] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/auth-check.php`, {
+      .get(`${import.meta.env.VITE_API_BASE_URL}auth-check.php`, {
         withCredentials: true,
       })
       .then((res) => {
         console.log(res.data);
         setUser(res.data.profile);
       })
-      .catch(() => setUser(null));
-    // .finally(() => setIsLoading(false));
-  }, []);
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
+  }, [refreshKey]);
 
   const logout = async () => {
-    await axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth-logout.php`, {
+    await axios.get(`${import.meta.env.VITE_API_BASE_URL}auth-logout.php`, {
       withCredentials: true,
     });
     setUser(null);
@@ -51,6 +52,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         logout,
         loading,
         setLoading,
+        setRefreshKey
       }}
     >
       {children}

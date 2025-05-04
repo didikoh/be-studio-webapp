@@ -8,7 +8,7 @@ import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUser, setSelectedPage } = useAppContext();
+  const { setUser } = useAppContext();
 
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -36,7 +36,7 @@ const Login = () => {
     formData.append("password", password);
 
     try {
-      const res = await axios.post(`${baseUrl}/auth-login.php`, formData, {
+      const res = await axios.post(`${baseUrl}auth-login.php`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true  // ✅ 必须加这个，才能存 session
       });
@@ -53,29 +53,6 @@ const Login = () => {
       setError(err.message);
       console.error(err);
     }
-
-
-
-    // 模拟登录成功
-    // if (phone == "888") {
-    //   login({ name: "测试用户（教练）", phone });
-    //   setSelectedPage("coach_course");
-    //   setUser("coach");
-    //   navigate("/coach_course");
-    // } else if (phone == "666") {
-    //   login({ name: "测试用户（管理员）", phone });
-    //   setSelectedPage("admin_home");
-    //   setUser("admin");
-    //   navigate("/admin_home");
-    // } else {
-    //   login({ name: "测试用户", phone });
-    //   setSelectedPage("account");
-    //   setUser("user");
-    //   navigate("/account");
-    // }
-    // if (rememberMe) {
-    //   localStorage.setItem("rememberPhone", phone);
-    // }
   };
 
   return (
@@ -104,14 +81,14 @@ const Login = () => {
           </div>
 
           <div className={styles["form-bottom-row"]}>
-            <label className={styles["remember-me"]}>
+            {/* <label className={styles["remember-me"]}>
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
               />
               记住我
-            </label>{" "}
+            </label>{" "} */}
             <span
               className={styles["register-text"]}
               onClick={() => navigate("/register")}

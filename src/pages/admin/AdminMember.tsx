@@ -1,39 +1,8 @@
-import React, { useState } from "react";
-import "./AdminMember.css";
-
-interface Member {
-  id: number;
-  name: string;
-  phone: string;
-  points: number;
-  balance: number;
-  birthday: string;
-  joinDate: string;
-  expireDate: string;
-}
-
-const mockMembers: Member[] = [
-  {
-    id: 1,
-    name: "李小美",
-    phone: "012-3456789",
-    points: 5,
-    balance: 80,
-    birthday: "1998-05-20",
-    joinDate: "2024-08-01",
-    expireDate: "2025-08-01",
-  },
-  {
-    id: 2,
-    name: "陈大强",
-    phone: "013-9876543",
-    points: 2,
-    balance: 120,
-    birthday: "1989-03-15",
-    joinDate: "2024-09-12",
-    expireDate: "2025-03-12",
-  },
-];
+import React, { useEffect, useState } from "react";
+import styles from "./AdminMember.module.css";
+import axios from "axios";
+import clsx from "clsx";
+import EditingMember from "../../components/admin/EditingMember";
 
 const filter = [
   { name: "名字", value: "name" },
@@ -45,14 +14,41 @@ const filter = [
   { name: "截止日期", value: "expireDate" },
 ];
 
-const AdminMember: React.FC = () => {
-  const [members, setMembers] = useState<Member[]>(mockMembers);
-  const [editingMember, setEditingMember] = useState<Member | null>(null);
-  const [chargingMember, setChargingMember] = useState<Member | null>(null);
+const AdminMember = () => {
+  const [selectedRole, setSelectedRole] = useState<any>("student");
+  const [allUsers, setAllUsers] = useState<any>(null);
+  const [editingMember, setEditingMember] = useState<any>(null);
+  const [chargingMember, setChargingMember] = useState<any>(null);
   const [chargeAmount, setChargeAmount] = useState<number>(0);
+  const [refresh, setRefresh] = useState(0);
 
-  const handleEdit = (member: Member) => setEditingMember(member);
-  const handleCharge = (member: Member) => {
+  useEffect(() => {
+    setAllUsers(null);
+    if (selectedRole === "student") {
+      axios
+        .get(`${import.meta.env.VITE_API_BASE_URL}admin/get-student.php`, {})
+        .then((res) => {
+          console.log(res.data.data);
+          setAllUsers(res.data.data);
+        })
+        .catch(() => {
+          alert("获取学生列表失败");
+        });
+    } else if (selectedRole === "coach") {
+      axios
+        .get(`${import.meta.env.VITE_API_BASE_URL}admin/get-coach.php`, {})
+        .then((res) => {
+          console.log(res.data.data);
+          setAllUsers(res.data.data);
+        })
+        .catch(() => {
+          alert("获取教师列表失败");
+        });
+    }
+  }, [selectedRole,refresh]);
+
+  const handleEdit = (user: any) => setEditingMember(user);
+  const handleCharge = (member: any) => {
     setChargingMember(member);
     setChargeAmount(0); // 重置
   };
@@ -61,131 +57,156 @@ const AdminMember: React.FC = () => {
     setChargingMember(null);
   };
 
-  const handleChargeConfirm = () => {
-    if (chargingMember) {
-      const updatedMembers = members.map((m) =>
-        m.id === chargingMember.id
-          ? { ...m, balance: m.balance + chargeAmount }
-          : m
-      );
-      setMembers(updatedMembers);
-      handleClosePopup();
-    }
+  const handleChargeConfirm = () => {};
+
+  const handleAddNew = () => {
+    setEditingMember({
+      name: "",
+      phone: "",
+      birthday: "",
+      id: null,
+      role: selectedRole,
+    });
   };
 
   return (
-    <div className="admin-member-container">
-      <div className="admin-member-header">
+    <div className={styles["admin-member-container"]}>
+      <div className={styles["admin-member-header"]}>
         <h2>会员管理</h2>
-        <div className="admin-member-header-btns">
-          <button className="active">学生</button>
-          <button>教师</button>
+        <div className={styles["admin-member-header-btns"]}>
+          <button
+            className={selectedRole === "student" ? styles["active"] : ""}
+            onClick={() => setSelectedRole("student")}
+          >
+            学生
+          </button>
+          <button
+            className={selectedRole === "coach" ? styles["active"] : ""}
+            onClick={() => setSelectedRole("coach")}
+          >
+            教师
+          </button>
         </div>
       </div>
 
-      <div className="admin-member-filter">
-        <select className="member-type-dropdown">
-          {filter.map((f) => (
-            <option key={f.value} value={f.value}>
-              {f.name}
-            </option>
-          ))}
-          <option value="all">全部成员</option>
-        </select>
+      <div className={styles["admin-member-filter"]}>
+        <div className={styles["member-filter-left"]}>
+          <select className={styles["member-type-dropdown"]}>
+            {filter.map((f) => (
+              <option key={f.value} value={f.value}>
+                {f.name}
+              </option>
+            ))}
+            <option value="all">全部成员</option>
+          </select>
 
-        <input type="text" placeholder="搜索" />
+          <input type="text" placeholder="搜索" />
+        </div>
+
+        <button
+          className={styles["add-new-member"]}
+          onClick={() => handleAddNew()}
+        >
+          新增
+        </button>
       </div>
 
-      <table className="member-table">
-        <thead>
-          <tr>
-            <th>姓名</th>
-            <th>电话</th>
-            <th>点数</th>
-            <th>余额 (RM)</th>
-            <th>生日</th>
-            <th>注册日期</th>
-            <th>截止日期</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          {members.map((m) => (
-            <tr key={m.id}>
-              <td>{m.name}</td>
-              <td>{m.phone}</td>
-              <td>{m.points}</td>
-              <td>{m.balance}</td>
-              <td>{m.birthday}</td>
-              <td>{m.joinDate}</td>
-              <td>{m.expireDate}</td>
-              <td style={{ display: "flex" }}>
-                <button className="btn edit" onClick={() => handleEdit(m)}>
-                  编辑
-                </button>
-                <button className="btn charge" onClick={() => handleCharge(m)}>
-                  充值
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+      <table className={styles["member-table"]}>
+        {selectedRole === "student" ? (
+          <>
+            <thead>
+              <tr>
+                <th>姓名</th>
+                <th>电话</th>
+                <th>点数</th>
+                <th>余额 (RM)</th>
+                <th>生日</th>
+                <th>注册日期</th>
+                <th>截止日期</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allUsers &&
+                allUsers.map((user: any) => (
+                  <tr key={user.id}>
+                    <td>{user.name}</td>
+                    <td>{user.phone}</td>
+                    <td>{user.points || "-"}</td>
+                    <td>{user.balance}</td>
+                    <td>{user.birthday}</td>
+                    <td>{user.join_date || "-"}</td>
+                    <td>{user.expireDate || "-"}</td>
+                    <td style={{ display: "flex" }}>
+                      <button
+                        className={clsx(styles.btn, styles.edit)}
+                        onClick={() => handleEdit(user)}
+                      >
+                        编辑
+                      </button>
+                      <button
+                        className={clsx(styles.btn, styles.charge)}
+                        onClick={() => handleCharge(user)}
+                      >
+                        会员
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </>
+        ) : (
+          <>
+            <thead>
+              <tr>
+                <th>姓名</th>
+                <th>电话</th>
+                <th>生日</th>
+                <th>该月学生</th>
+                <th>该月课程</th>
+                <th>注册日期</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allUsers &&
+                allUsers.map((user: any) => (
+                  <tr key={user.id}>
+                    <td>{user.name}</td>
+                    <td>{user.phone}</td>
+                    <td>{user.birthday}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>{user.join_date || "-"}</td>
+                    <td style={{ display: "flex" }}>
+                      <button
+                        className={clsx(styles.btn, styles.edit)}
+                        onClick={() => handleEdit(user)}
+                      >
+                        编辑
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </>
+        )}
       </table>
 
       {/* 编辑弹窗 */}
       {editingMember && (
-        <div className="popup-overlay">
-          <div className="popup-card">
-            <h3>编辑会员资料</h3>
-            <div className="edit-row">
-              <label>姓名:</label>
-              <input type="text" value={editingMember.name} readOnly />
-            </div>
-
-            <div className="edit-row">
-              <label>电话:</label>
-              <input type="text" value={editingMember.phone} readOnly />
-            </div>
-            <div className="edit-row">
-              <label>点数:</label>
-              <input
-                type="number"
-                placeholder="点数"
-                defaultValue={editingMember.points}
-              />
-            </div>
-            <div className="edit-row">
-              <label>余额:</label>
-              <input
-                type="number"
-                placeholder="余额"
-                defaultValue={editingMember.balance}
-              />
-            </div>
-            <div className="edit-row">
-              <label>生日:</label>
-              <input type="date" defaultValue={editingMember.birthday} />
-            </div>
-            <div className="edit-row">
-              <label>注册日期:</label>
-              <input type="date" defaultValue={editingMember.joinDate} />
-            </div>
-
-            <div className="popup-actions">
-              <button className="btn delete">删除会员</button>
-              <button className="btn confirm">保存</button>
-              <button className="btn close-btn" onClick={handleClosePopup}>
-                取消
-              </button>
-            </div>
-          </div>
-        </div>
+        <EditingMember
+          editingMember={editingMember}
+          handleClosePopup={handleClosePopup}
+          selectedRole={selectedRole}
+          setRefresh={setRefresh}
+        />
       )}
 
       {/* 充值弹窗 */}
       {chargingMember && (
-        <div className="popup-overlay">
-          <div className="popup-card topup">
+        <div className={styles["popup-overlay"]}>
+          <div className={styles["popup-card-topup"]}>
             <h3>充值余额</h3>
             <p>
               <strong>会员：</strong>
@@ -200,11 +221,17 @@ const AdminMember: React.FC = () => {
               value={chargeAmount}
               onChange={(e) => setChargeAmount(Number(e.target.value))}
             />
-            <div className="popup-actions">
-              <button className="btn confirm" onClick={handleChargeConfirm}>
+            <div className={styles["popup-actions"]}>
+              <button
+                className={clsx(styles.btn, styles.confirm)}
+                onClick={handleChargeConfirm}
+              >
                 确认充值
               </button>
-              <button className="btn close-btn" onClick={handleClosePopup}>
+              <button
+                className={clsx(styles.btn, styles["close-btn"])}
+                onClick={handleClosePopup}
+              >
                 取消
               </button>
             </div>

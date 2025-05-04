@@ -31,14 +31,14 @@ const AdminAccount: React.FC = () => {
         </p>
 
         <div className={clsx(styles["account-actions"])}>
-          <button
+          {/* <button
             className={clsx(styles["btn"], styles["change"])}
             onClick={() => {
-              setSelectedPage("change_password");
+              
             }}
           >
             修改密码
-          </button>
+          </button> */}
           <button
             className={clsx(styles["btn"], styles["logout"])}
             onClick={() => {
@@ -54,4 +54,3 @@ const AdminAccount: React.FC = () => {
 };
 
 export default AdminAccount;
-

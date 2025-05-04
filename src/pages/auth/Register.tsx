@@ -54,7 +54,7 @@ const Register = () => {
     }
 
     try {
-      const res = await axios.post(`${baseUrl}/auth-register.php`, formData, {
+      const res = await axios.post(`${baseUrl}auth-register.php`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true, // ✅ 必须加这个，才能存 session
       });

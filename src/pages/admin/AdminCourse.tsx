@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Course, mockCourses } from "../../mocks/courses";
+import styles from "./AdminCourse.module.css";
+import clsx from "clsx";
 
 const AdminCourse = () => {
   const [courses, setCourses] = useState<Course[]>(mockCourses);
@@ -7,43 +9,20 @@ const AdminCourse = () => {
   const [chargingCourse, setChargingCourse] = useState<Course | null>(null);
 
   const handleEdit = (member: Course) => setEditingCourse(member);
-//   const handleCharge = (member: Course) => {
-//     setChargingCourse(member);
-//   };
 
   const handleClosePopup = () => {
     setEditingCourse(null);
     setChargingCourse(null);
-    console.log(chargingCourse,setCourses)
+    console.log(chargingCourse, setCourses);
   };
 
-//   const handleChargeConfirm = () => {
-
-//   };
   return (
-    <div className="admin-member-container">
-      <div className="admin-member-header">
+    <div className={styles["container"]}>
+      <div className={styles["header"]}>
         <h2>课程管理</h2>
-        {/* <div className="admin-member-header-btns">
-          <button className="active">学生</button>
-          <button>教师</button>
-        </div> */}
       </div>
 
-      {/* <div className="admin-member-filter">
-        <select className="member-type-dropdown">
-          {filter.map((f) => (
-            <option key={f.value} value={f.value}>
-              {f.name}
-            </option>
-          ))}
-          <option value="all">全部成员</option>
-        </select>
-
-        <input type="text" placeholder="搜索" />
-      </div> */}
-
-      <table className="member-table">
+      <table className={styles["table"]}>
         <thead>
           <tr>
             <th>课名</th>
@@ -66,33 +45,35 @@ const AdminCourse = () => {
               <td>{c.instructor}</td>
               <td>{c.startDate}</td>
               <td>{c.startTime}</td>
-              <td style={{ display: "flex" }}>
-                <button className="btn edit" onClick={() => handleEdit(c)}>
+              <td className={styles["action-buttons"]}>
+                <button
+                  className={clsx(styles.btn, styles.edit)}
+                  onClick={() => handleEdit(c)}
+                >
                   编辑
                 </button>
-                {/* <button className="btn charge" onClick={() => handleCharge(c)}>
-                  
-                </button> */}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* 编辑弹窗 */}
       {editingCourse && (
-        <div className="popup-overlay">
-          <div className="popup-card">
+        <div className={styles["popup-overlay"]}>
+          <div className={styles["popup-card"]}>
             <h3>编辑课程资料</h3>
-            <div className="edit-row">
+            <div className={styles["edit-row"]}>
               <label>课名:</label>
               <input type="text" value={editingCourse.name} readOnly />
             </div>
 
-            <div className="popup-actions">
-              <button className="btn delete">删除会员</button>
-              <button className="btn confirm">保存</button>
-              <button className="btn close-btn" onClick={handleClosePopup}>
+            <div className={styles["popup-actions"]}>
+              <button className={clsx(styles.btn, styles.delete)}>删除会员</button>
+              <button className={clsx(styles.btn, styles.confirm)}>保存</button>
+              <button
+                className={clsx(styles.btn, styles["close-btn"])}
+                onClick={handleClosePopup}
+              >
                 取消
               </button>
             </div>
@@ -104,3 +85,4 @@ const AdminCourse = () => {
 };
 
 export default AdminCourse;
+
