@@ -1,20 +1,27 @@
 import axios from "axios";
-import styles from "./EditingMember.module.css";
+import styles from "./EditingUser.module.css";
 import clsx from "clsx";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input/input";
-import { useState } from "react";
-const EditingMember = ({
-  editingMember,
+import { useEffect, useState } from "react";
+const EditingUser = ({
+  setEditingUser,
+  editingUser,
   handleClosePopup,
   selectedRole,
   setRefresh,
 }: any) => {
-  const [name, setName] = useState<any>(editingMember.name);
-  const [phone, setPhone] = useState<any>(editingMember.phone);
-  const [birthday, setBirthday] = useState<any>(editingMember.birthday);
+  const [name, setName] = useState<any>(editingUser.name);
+  const [phone, setPhone] = useState<any>(editingUser.phone);
+  const [birthday, setBirthday] = useState<any>(editingUser.birthday);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+
+  useEffect(() => {
+    console.log(editingUser);
+  }, [])
+  
 
   const handleSave = () => {
-    if (editingMember.id == null) {
+    if (editingUser.id) {
       if (name == "" || phone == "" || birthday == "") {
         console.log(name, phone, birthday);
         alert("请填写完整信息");
@@ -25,26 +32,22 @@ const EditingMember = ({
         return;
       }
 
-      if (selectedRole == "coach") {
-        axios
-          .post(`${import.meta.env.VITE_API_BASE_URL}admin/edit-coach.php`, {
-            name: name,
-            phone: phone,
-            birthday: birthday,
-            action: "new",
-          })
-          .then((res) => {
-            if (res.data.success) {
-              setRefresh((prev: any) => prev + 1);
-            }
-          })
-          .catch((err) => alert(err));
-        console.log("创建教练");
-      } else {
-        console.log("创建别的");
-      }
-    } else {
-      console.log("更新会员");
+      axios
+        .post(`${import.meta.env.VITE_API_BASE_URL}admin/edit-user.php`, {
+          name: name,
+          phone: phone,
+          birthday: birthday,
+          role: selectedRole,
+          id: editingUser.id,
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.data.success) {
+            setRefresh((prev: any) => prev + 1);
+            setEditingUser(null);
+          }
+        })
+        .catch((err) => alert(err));
     }
   };
 
@@ -53,7 +56,7 @@ const EditingMember = ({
   return (
     <div className={styles["popup-overlay"]}>
       <div className={styles["popup-card"]}>
-        <h3>编辑会员资料</h3>
+        <h3>编辑{selectedRole == "student" ? "学生" : "教师"}资料</h3>
         <form>
           <div className={styles["edit-row"]}>
             <label>姓名:</label>
@@ -90,13 +93,15 @@ const EditingMember = ({
           </div>
 
           <div className={styles["popup-actions"]}>
-            <button
-              type="button"
-              className={clsx(styles.btn, styles.delete)}
-              onClick={() => handleDelete()}
-            >
-              删除会员
-            </button>
+            {editingUser.id != -1 && (
+              <button
+                type="button"
+                className={clsx(styles.btn, styles.delete)}
+                onClick={() => setDeleteConfirm(true)}
+              >
+                删除用户
+              </button>
+            )}
             <button
               type="button"
               className={clsx(styles.btn, styles.confirm)}
@@ -114,8 +119,32 @@ const EditingMember = ({
           </div>
         </form>
       </div>
+
+      {deleteConfirm && (
+        <div className={styles["popup-overlay"]}>
+          <div className={clsx(styles["popup-card"], styles["delete-confirm"])}>
+            <h3>确认删除该用户?</h3>
+            <span>名字:{editingUser.name}</span>
+            <div className={styles["popup-actions"]}>
+              <button
+                className={clsx(styles.btn, styles.delete)}
+                onClick={handleDelete}
+              >
+                确定
+              </button>
+              <button
+                type="button"
+                className={clsx(styles.btn, styles["close-btn"])}
+                onClick={() => setDeleteConfirm(false)}
+              >
+                取消
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default EditingMember;
+export default EditingUser;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./AdminMember.module.css";
 import axios from "axios";
 import clsx from "clsx";
-import EditingMember from "../../components/admin/EditingMember";
+import EditingUser from "../../components/admin/EditingUser";
 
 const filter = [
   { name: "名字", value: "name" },
@@ -17,7 +17,7 @@ const filter = [
 const AdminMember = () => {
   const [selectedRole, setSelectedRole] = useState<any>("student");
   const [allUsers, setAllUsers] = useState<any>(null);
-  const [editingMember, setEditingMember] = useState<any>(null);
+  const [editingUser, setEditingUser] = useState<any>(null);
   const [chargingMember, setChargingMember] = useState<any>(null);
   const [chargeAmount, setChargeAmount] = useState<number>(0);
   const [refresh, setRefresh] = useState(0);
@@ -47,24 +47,23 @@ const AdminMember = () => {
     }
   }, [selectedRole,refresh]);
 
-  const handleEdit = (user: any) => setEditingMember(user);
   const handleCharge = (member: any) => {
     setChargingMember(member);
     setChargeAmount(0); // 重置
   };
   const handleClosePopup = () => {
-    setEditingMember(null);
+    setEditingUser(null);
     setChargingMember(null);
   };
 
   const handleChargeConfirm = () => {};
 
   const handleAddNew = () => {
-    setEditingMember({
+    setEditingUser({
       name: "",
       phone: "",
       birthday: "",
-      id: null,
+      id: -1,
       role: selectedRole,
     });
   };
@@ -97,7 +96,6 @@ const AdminMember = () => {
                 {f.name}
               </option>
             ))}
-            <option value="all">全部成员</option>
           </select>
 
           <input type="text" placeholder="搜索" />
@@ -120,8 +118,9 @@ const AdminMember = () => {
                 <th>电话</th>
                 <th>点数</th>
                 <th>余额 (RM)</th>
+                <th>配套</th>
                 <th>生日</th>
-                <th>注册日期</th>
+                <th>启动日期</th>
                 <th>截止日期</th>
                 <th>操作</th>
               </tr>
@@ -132,15 +131,16 @@ const AdminMember = () => {
                   <tr key={user.id}>
                     <td>{user.name}</td>
                     <td>{user.phone}</td>
-                    <td>{user.points || "-"}</td>
+                    <td>{user.point || "-"}</td>
                     <td>{user.balance}</td>
+                    <td>{user.member || "-"}</td>
                     <td>{user.birthday}</td>
-                    <td>{user.join_date || "-"}</td>
+                    <td>{user.active_date || "-"}</td>
                     <td>{user.expireDate || "-"}</td>
                     <td style={{ display: "flex" }}>
                       <button
                         className={clsx(styles.btn, styles.edit)}
-                        onClick={() => handleEdit(user)}
+                        onClick={() => setEditingUser(user)}
                       >
                         编辑
                       </button>
@@ -163,7 +163,7 @@ const AdminMember = () => {
                 <th>电话</th>
                 <th>生日</th>
                 <th>该月学生</th>
-                <th>该月课程</th>
+                <th>该月课堂</th>
                 <th>注册日期</th>
                 <th>操作</th>
               </tr>
@@ -181,7 +181,7 @@ const AdminMember = () => {
                     <td style={{ display: "flex" }}>
                       <button
                         className={clsx(styles.btn, styles.edit)}
-                        onClick={() => handleEdit(user)}
+                        onClick={() => setEditingUser(user)}
                       >
                         编辑
                       </button>
@@ -194,12 +194,13 @@ const AdminMember = () => {
       </table>
 
       {/* 编辑弹窗 */}
-      {editingMember && (
-        <EditingMember
-          editingMember={editingMember}
+      {editingUser && (
+        <EditingUser
+          editingUser={editingUser}
           handleClosePopup={handleClosePopup}
           selectedRole={selectedRole}
           setRefresh={setRefresh}
+          setEditingUser={setEditingUser}
         />
       )}
 

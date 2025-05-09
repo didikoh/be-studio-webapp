@@ -25,7 +25,9 @@ const Account = () => {
 
   if (!user) {
     return (
-      <div className={clsx(styles["account-container"], styles["not-logged-in"])}>
+      <div
+        className={clsx(styles["account-container"], styles["not-logged-in"])}
+      >
         <div className={styles["account-box"]}>
           <p>尚未登录</p>
           <Link to="/login" className={styles["login-link"]}>
@@ -50,7 +52,14 @@ const Account = () => {
       <div className={styles["dashboard-header"]}>
         <div className={styles["user-info"]}>
           <div className={styles["avatar"]}>
-            <img src={import.meta.env.VITE_API_BASE_URL + user.profile_pic} alt="avatar" />
+            <img
+              src={
+                user.profile_pic
+                  ? import.meta.env.VITE_API_BASE_URL + user.profile_pic
+                  : "/assets/Avatar/Default.webp"
+              }
+              alt="avatar"
+            />
           </div>
           <div className={styles["login-text"]}>
             {user.name}
@@ -101,7 +110,10 @@ const Account = () => {
           ) : (
             <>
               <div className={styles["stat-label"]}>不是会员？</div>
-              <div className={clsx(styles["stat-value"],styles["join-us"])} onClick={joinUs}>
+              <div
+                className={clsx(styles["stat-value"], styles["join-us"])}
+                onClick={joinUs}
+              >
                 加入我们
               </div>
             </>
@@ -152,8 +164,12 @@ const Account = () => {
                     className={styles["course-bg"]}
                   />
                   <div className={styles["course-overlay"]}>
-                    <h3 className={styles["course-title"]}>Aerial Music Flow</h3>
-                    <p className={styles["course-info"]}>R*-ui老师 ｜ 空中教室</p>
+                    <h3 className={styles["course-title"]}>
+                      Aerial Music Flow
+                    </h3>
+                    <p className={styles["course-info"]}>
+                      R*-ui老师 ｜ 空中教室
+                    </p>
                     <p className={styles["course-duration"]}>
                       课程时长 <strong>60</strong> 分钟
                     </p>
@@ -202,4 +218,3 @@ const Account = () => {
 };
 
 export default Account;
-
