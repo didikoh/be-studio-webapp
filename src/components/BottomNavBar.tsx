@@ -16,15 +16,15 @@ import { MdClass } from "react-icons/md";
 const navItems = [
   { label: "首页", icon: <FaHome />, value: "home", role: "student" },
   { label: "预约", icon: <FaClock />, value: "schedule", role: "student" },
-  {
-    label: "活动",
-    icon: <FaShoppingBag />,
-    value: "event",
-    role: "student",
-  },
+  // {
+  //   label: "活动",
+  //   icon: <FaShoppingBag />,
+  //   value: "event",
+  //   role: "student",
+  // },
   { label: "账号", icon: <FaUser />, value: "account", role: "student" },
   { label: "课程", icon: <GrYoga />, value: "coach_course", role: "coach" },
-  { label: "场地", icon: <FaCalendar />, value: "coach_site", role: "coach" },
+  // { label: "场地", icon: <FaCalendar />, value: "coach_site", role: "coach" },
   { label: "账号", icon: <FaUser />, value: "coach_account", role: "coach" },
 
   { label: "首页", icon: <FaHome />, value: "admin_home", role: "admin" },
@@ -36,12 +36,12 @@ const navItems = [
     role: "admin",
   },
   { label: "课程", icon: <MdClass />, value: "admin_course", role: "admin" },
-  {
-    label: "场地",
-    icon: <GrYoga />,
-    value: "admin_site",
-    role: "admin",
-  },
+  // {
+  //   label: "场地",
+  //   icon: <GrYoga />,
+  //   value: "admin_site",
+  //   role: "admin",
+  // },
   { label: "账号", icon: <FaUser />, value: "admin_account", role: "admin" },
 ];
 

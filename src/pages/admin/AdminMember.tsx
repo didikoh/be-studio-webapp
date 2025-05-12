@@ -3,6 +3,7 @@ import styles from "./AdminMember.module.css";
 import axios from "axios";
 import clsx from "clsx";
 import EditingUser from "../../components/admin/EditingUser";
+import popupStyle from "../../components/admin/EditingUser.module.css";
 
 const filter = [
   { name: "名字", value: "name" },
@@ -14,12 +15,15 @@ const filter = [
   { name: "截止日期", value: "expireDate" },
 ];
 
+const packages = ["promotion", "basic","none"];
+
 const AdminMember = () => {
   const [selectedRole, setSelectedRole] = useState<any>("student");
   const [allUsers, setAllUsers] = useState<any>(null);
   const [editingUser, setEditingUser] = useState<any>(null);
   const [chargingMember, setChargingMember] = useState<any>(null);
   const [chargeAmount, setChargeAmount] = useState<number>(0);
+  const [chargePackage, setChargePackage] = useState<string>("");
   const [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
@@ -45,18 +49,12 @@ const AdminMember = () => {
           alert("获取教师列表失败");
         });
     }
-  }, [selectedRole,refresh]);
+  }, [selectedRole, refresh]);
 
-  const handleCharge = (member: any) => {
-    setChargingMember(member);
-    setChargeAmount(0); // 重置
-  };
   const handleClosePopup = () => {
     setEditingUser(null);
     setChargingMember(null);
   };
-
-  const handleChargeConfirm = () => {};
 
   const handleAddNew = () => {
     setEditingUser({
@@ -66,6 +64,30 @@ const AdminMember = () => {
       id: -1,
       role: selectedRole,
     });
+  };
+
+  const handleCharge = (member: any) => {
+    setChargingMember(member);
+    setChargePackage(member.package ? member.package : "none");
+    setChargeAmount(0); // 重置
+  };
+
+  const handleChargeConfirm = () => {
+    console.log(chargePackage);
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}admin/topup.php`, {
+        id: chargingMember.id,
+        amount: chargeAmount,
+        package: chargePackage,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setRefresh((prev) => prev + 1);
+        setChargingMember(null);
+      })
+      .catch(() => {
+        alert("充值失败");
+      });
   };
 
   return (
@@ -133,10 +155,10 @@ const AdminMember = () => {
                     <td>{user.phone}</td>
                     <td>{user.point || "-"}</td>
                     <td>{user.balance}</td>
-                    <td>{user.member || "-"}</td>
+                    <td>{user.package || "-"}</td>
                     <td>{user.birthday}</td>
                     <td>{user.active_date || "-"}</td>
-                    <td>{user.expireDate || "-"}</td>
+                    <td>{user.expire_date || "-"}</td>
                     <td style={{ display: "flex" }}>
                       <button
                         className={clsx(styles.btn, styles.edit)}
@@ -206,36 +228,61 @@ const AdminMember = () => {
 
       {/* 充值弹窗 */}
       {chargingMember && (
-        <div className={styles["popup-overlay"]}>
-          <div className={styles["popup-card-topup"]}>
-            <h3>充值余额</h3>
-            <p>
-              <strong>会员：</strong>
-              {chargingMember.name}
-            </p>
-            <p>
-              <strong>当前余额：</strong>RM {chargingMember.balance}
-            </p>
-            <input
-              type="number"
-              placeholder="输入充值金额"
-              value={chargeAmount}
-              onChange={(e) => setChargeAmount(Number(e.target.value))}
-            />
-            <div className={styles["popup-actions"]}>
-              <button
-                className={clsx(styles.btn, styles.confirm)}
-                onClick={handleChargeConfirm}
-              >
-                确认充值
-              </button>
-              <button
-                className={clsx(styles.btn, styles["close-btn"])}
-                onClick={handleClosePopup}
-              >
-                取消
-              </button>
-            </div>
+        <div className={popupStyle["popup-overlay"]}>
+          <div className={popupStyle["popup-card"]}>
+            <h3>充值/会员</h3>
+            <form>
+              <div className={popupStyle["edit-row"]}>
+                <span className={popupStyle["labelOnly"]}>
+                  名字： {chargingMember.name}
+                </span>
+              </div>
+
+              <div className={popupStyle["edit-row"]}>
+                <label>配套:</label>
+                <select
+                  name="package"
+                  className={popupStyle["form-input"]}
+                  value={chargePackage}
+                  onChange={(e) => setChargePackage(e.target.value)}
+                  required
+                >
+                  {packages.map((p: any) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={popupStyle["edit-row"]}>
+                <label>充值:</label>
+                <input
+                  type="text"
+                  className={popupStyle["form-input"]}
+                  value={chargeAmount}
+                  onChange={(e) => setChargeAmount(Number(e.target.value))}
+                  required
+                />
+              </div>
+
+              <div className={popupStyle["popup-actions"]}>
+                <button
+                  type="button"
+                  className={clsx(popupStyle.btn, popupStyle.confirm)}
+                  onClick={() => handleChargeConfirm()}
+                >
+                  确认
+                </button>
+                <button
+                  type="button"
+                  className={clsx(popupStyle.btn, popupStyle["close-btn"])}
+                  onClick={() => setChargingMember(null)}
+                >
+                  取消
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -102,7 +102,7 @@ const Account = () => {
 
       <div className={styles["account-stats-section"]}>
         <div className={styles["stat-item"]}>
-          {user.member ? (
+          {user.package!=null ? (
             <>
               <div className={styles["stat-label"]}>会员截至</div>
               <div className={styles["stat-value"]}>{user.expire_date}</div>
@@ -121,7 +121,7 @@ const Account = () => {
         </div>
         <div className={clsx(styles["stat-item"], styles["right"])}>
           <div className={styles["stat-label"]}>本周学习</div>
-          <div className={styles["stat-value"]}>0分钟</div>
+          <div className={styles["stat-value"]}>0{" "}分钟</div>
         </div>
       </div>
 

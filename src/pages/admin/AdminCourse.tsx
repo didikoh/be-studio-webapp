@@ -35,6 +35,8 @@ const AdminCourse = () => {
     min_book: 0,
     coach: "",
     start_time: "",
+    location: "Level 2",
+    duration: 0,
   });
 
   const [coachList, setCoachList] = useState<any>([]);
@@ -42,18 +44,10 @@ const AdminCourse = () => {
   const [keyword, setKeyword] = useState("");
   const [filterDate, setFilterDate] = useState("");
 
-  // 根据 id 获取课程
-  const fetchCourseById = async (id: number) => {
-    const res = await axios.get(`/api/get-course.php?id=${id}`);
-    if (res.data.success) {
-      setCourseForm(res.data.course);
-    }
-  };
-
   const fetchCourses = async () => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}get-course.php`
+        `${import.meta.env.VITE_API_BASE_URL}/admin/get-course.php`
       );
       console.log(res);
       if (res.data.success) {
@@ -69,6 +63,10 @@ const AdminCourse = () => {
       .get(`${import.meta.env.VITE_API_BASE_URL}admin/get-coach.php`)
       .then((res) => {
         setCoachList(res.data.data);
+        setCourseForm((prev) => ({
+          ...prev,
+          coach: res.data.data[0].name,
+        }));
       });
     fetchCourses();
   }, []);
@@ -83,6 +81,8 @@ const AdminCourse = () => {
       min_book: course.min_book,
       coach: course.coach,
       start_time: course.start_time,
+      location: course.location,
+      duration: course.duration,
     });
   };
 
@@ -96,10 +96,12 @@ const AdminCourse = () => {
       name: "",
       price: 0,
       price_m: 0,
-      difficulty: 0,
+      difficulty: 1,
       min_book: 0,
-      coach: "",
+      coach: coachList[0].name,
       start_time: "",
+      location: "Level 2",
+      duration: 0,
     });
   };
 
@@ -202,37 +204,39 @@ const AdminCourse = () => {
         </thead>
         <tbody>
           {courses &&
-              courses
+            courses
               .filter((c: any) => {
-                const matchKeyword = c.name.toLowerCase().includes(keyword.toLowerCase());
-          
+                const matchKeyword = c.name
+                  .toLowerCase()
+                  .includes(keyword.toLowerCase());
+
                 const matchDate = filterDate
                   ? c.start_time.startsWith(filterDate) // "2025-05-15 06:23:00".startsWith("2025-05-15")
                   : true;
-          
+
                 return matchKeyword && matchDate;
               })
               .map((c: any) => (
-              <tr key={c.id}>
-                <td>{c.name}</td>
-                <td>
-                  {c.price}/{c.price_m}
-                </td>
-                <td>{c.min_book}</td>
-                <td>100</td>
-                <td>{c.coach}</td>
-                <td>{formatStartTime(c.start_time).dateStr}</td>
-                <td>{formatStartTime(c.start_time).timeStr}</td>
-                <td className={styles["action-buttons"]}>
-                  <button
-                    className={clsx(styles.btn, styles.edit)}
-                    onClick={() => handleEdit(c)}
-                  >
-                    编辑
-                  </button>
-                </td>
-              </tr>
-            ))}
+                <tr key={c.id}>
+                  <td>{c.name}</td>
+                  <td>
+                    {c.price}/{c.price_m}
+                  </td>
+                  <td>{c.min_book}</td>
+                  <td>100</td>
+                  <td>{c.coach}</td>
+                  <td>{formatStartTime(c.start_time).dateStr}</td>
+                  <td>{formatStartTime(c.start_time).timeStr}</td>
+                  <td className={styles["action-buttons"]}>
+                    <button
+                      className={clsx(styles.btn, styles.edit)}
+                      onClick={() => handleEdit(c)}
+                    >
+                      编辑
+                    </button>
+                  </td>
+                </tr>
+              ))}
         </tbody>
       </table>
 
@@ -262,7 +266,7 @@ const AdminCourse = () => {
                 <input
                   name="price"
                   className={styles["form-input"]}
-                  type="text"
+                  type="number"
                   value={courseForm.price}
                   onChange={handleChange}
                   required
@@ -273,7 +277,7 @@ const AdminCourse = () => {
                 <input
                   name="price_m"
                   className={styles["form-input"]}
-                  type="text"
+                  type="number"
                   value={courseForm.price_m}
                   onChange={handleChange}
                   required
@@ -300,7 +304,7 @@ const AdminCourse = () => {
                 <input
                   name="min_book"
                   className={styles["form-input"]}
-                  type="text"
+                  type="number"
                   value={courseForm.min_book}
                   onChange={handleChange}
                   required
@@ -330,6 +334,36 @@ const AdminCourse = () => {
                   className={styles["form-input"]}
                   type="datetime-local"
                   value={courseForm.start_time}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className={styles["edit-row"]}>
+                <label>场地:</label>
+                <select
+                  name="location"
+                  className={styles["form-input"]}
+                  value={courseForm.location}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="Level 2">
+                    Level 2
+                  </option>
+                  <option value="Level 3">
+                    Level 3
+                  </option>
+                </select>
+              </div>
+
+              <div className={styles["edit-row"]}>
+                <label>时长（分钟）:</label>
+                <input
+                  name="duration"
+                  className={styles["form-input"]}
+                  type="number"
+                  value={courseForm.duration}
                   onChange={handleChange}
                   required
                 />

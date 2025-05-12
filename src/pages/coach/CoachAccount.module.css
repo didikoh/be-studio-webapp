@@ -323,7 +323,6 @@
   color: var(--accent-color);
   text-decoration: underline;
 }
-
 .book-button {
   position: absolute;
   right: 15px;
@@ -337,3 +336,4 @@
   font-weight: bold;
   cursor: pointer;
 }
+

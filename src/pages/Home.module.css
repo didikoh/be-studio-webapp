@@ -139,6 +139,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   gap: 1rem;
   color: var(--text-color);
   width: 50%;
@@ -149,6 +150,7 @@
 }
 
 .balance-header {
+  text-align: center;
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 6px;
@@ -157,6 +159,16 @@
 .balance-amount {
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+.join-us {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-style: italic;
+  color: var(--accent-color);
+  text-decoration: underline;
 }
 
 .appointment-card {
@@ -253,18 +265,7 @@
   color: gold;
 }
 
-.course-tag {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  background: rgba(255, 255, 255, 0.8);
-  color: #333;
-  font-size: 0.8rem;
-  padding: 4px 8px;
-  border-radius: 6px;
-}
-
-.book-button {
+.book-btn {
   position: absolute;
   right: 15px;
   bottom: 15px;
@@ -276,4 +277,15 @@
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.course-tag {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #333;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 6px;
 }

@@ -6,13 +6,18 @@ import { useState } from "react";
 import { FiSettings } from "react-icons/fi";
 import { LuLogOut } from "react-icons/lu";
 import { CgClose } from "react-icons/cg";
+import styles from "./CoachAccount.module.css";
+import { PiPen } from "react-icons/pi";
+import AccountSetting from "../../components/AccountSetting";
+import clsx from "clsx";
+import { coach_rules } from "../../assets/rules/rule";
 
 const CoachAccount = () => {
-  const logout = useUserStore((state: any) => state.logout);
+  const { user, logout } = useAppContext();
   const navigate = useNavigate();
-  const { setUserRole,setSelectedPage } = useAppContext();
   const [filterValue, setFilterValue] = useState("Booked");
   const [ruleOpen, setRuleOpen] = useState(false);
+  const [settingOpen, setSettingOpen] = useState(false);
 
   const filters = [
     { name: "已预约", value: "Booked" },
@@ -23,10 +28,12 @@ const CoachAccount = () => {
 
   if (!user) {
     return (
-      <div className="account-container not-logged-in">
-        <div className="account-box">
+      <div
+        className={clsx(styles["account-container"], styles["not-logged-in"])}
+      >
+        <div className={styles["account-box"]}>
           <p>尚未登录</p>
-          <Link to="/login" className="login-link">
+          <Link to="/login" className={styles["login-link"]}>
             去登录
           </Link>
         </div>
@@ -35,70 +42,79 @@ const CoachAccount = () => {
   }
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <div className="user-info">
-          <div className="avatar"></div>
-          <div className="login-text">
+    <div className={styles["dashboard-container"]}>
+      <div className={styles["dashboard-header"]}>
+        <div className={styles["user-info"]}>
+          <div className={styles["avatar"]}>
+            <img
+              src={
+                user.profile_pic
+                  ? import.meta.env.VITE_API_BASE_URL + user.profile_pic
+                  : "/assets/Avatar/Default.webp"
+              }
+              alt="avatar"
+            />
+          </div>
+          <div className={styles["login-text"]}>
             {user.name}
             <br />
             <span>{user.phone}</span>
           </div>
         </div>
 
-        <div className="account-dashboard-btns">
+        <div className={styles["account-dashboard-btns"]}>
           <button
-            className="account-dashboard-btn"
-            onClick={() => navigate("/account")}
-          >
-            <FiSettings className="logout-icon" />
-          </button>
-          <button
-            className="account-dashboard-btn"
+            className={styles["account-dashboard-btn"]}
             onClick={() => {
-              logout();
-              navigate("/");
-              setSelectedPage("home");
-              setUserRole("student");
+              console.log(settingOpen);
+              setSettingOpen(true);
             }}
           >
-            <LuLogOut className="logout-icon" />
+            <PiPen />
+          </button>
+          <button
+            className={styles["account-dashboard-btn"]}
+            onClick={async () => {
+              await logout();
+            }}
+          >
+            <LuLogOut />
           </button>
         </div>
       </div>
 
-      <div className="account-stats-section">
-        <div className="stat-item">
-          <div className="stat-label">本月学生人数</div>
-          <div className="stat-value">200</div>
+      <div className={styles["account-stats-section"]}>
+        <div className={styles["stat-item"]}>
+          <div className={styles["stat-label"]}>本月课堂数</div>
+          <div className={styles["stat-value"]}>10</div>
         </div>
-        <div className="stat-item right">
-          <div className="stat-label">本月课堂数</div>
-          <div className="stat-value">5</div>
+        <div className={clsx(styles["stat-item"], styles["right"])}>
+          <div className={styles["stat-label"]}>本月学生人数</div>
+          <div className={styles["stat-value"]}>200</div>
         </div>
       </div>
 
-      <div className="account-stats-section rule">
-        <div className="stat-item rule">
+      <div className={clsx(styles["account-stats-section"], styles["rule"])}>
+        <div className={clsx(styles["stat-item"], styles["rule"])}>
           <div
-            className="stat-value rule"
+            className={clsx(styles["stat-value"], styles["rule"])}
             onClick={() => {
               setRuleOpen(true);
             }}
           >
-            查看教练规则
+            查看教师规则
           </div>
         </div>
       </div>
 
-      <div className="account-couses-section">
-        <div className="account-couses-strip">
+      <div className={styles["account-couses-section"]}>
+        <div className={styles["account-couses-strip"]}>
           {filters.map((item, index) => (
             <button
-              className={
-                "account-couses-filter" +
-                (filterValue === item.value ? " active" : "")
-              }
+              className={clsx(
+                styles["account-couses-filter"],
+                filterValue === item.value && styles["active"]
+              )}
               key={index}
               onClick={() => setFilterValue(item.value)}
             >
@@ -106,28 +122,32 @@ const CoachAccount = () => {
             </button>
           ))}
         </div>
-        <div className="account-couses-list">
+        <div className={styles["account-couses-list"]}>
           {reservations.map(
-            (item, index) =>
+            (item) =>
               item.status === filterValue && (
-                <div className="course-card" key={index}>
+                <div className={styles["course-card"]} key={item.id}>
                   <img
                     src="/assets/gallery1.jpg"
                     alt="课程背景"
-                    className="course-bg"
+                    className={styles["course-bg"]}
                   />
-                  <div className="course-overlay">
-                    <h3 className="course-title">Aerial Music Flow</h3>
-                    <p className="course-info">R*-ui老师 ｜ 空中教室</p>
-                    <p className="course-duration">
+                  <div className={styles["course-overlay"]}>
+                    <h3 className={styles["course-title"]}>
+                      Aerial Music Flow
+                    </h3>
+                    <p className={styles["course-info"]}>
+                      R*-ui老师 ｜ 空中教室
+                    </p>
+                    <p className={styles["course-duration"]}>
                       课程时长 <strong>60</strong> 分钟
                     </p>
-                    <p className="course-difficulty">
+                    <p className={styles["course-difficulty"]}>
                       课程难度
-                      <span className="stars">⭐ ⭐</span>
+                      <span className={styles["stars"]}>⭐ ⭐</span>
                     </p>
-                    <button className="book-button">立即预约</button>
-                    <div className="course-tag">团课</div>
+                    <button className={styles["book-button"]}>立即预约</button>
+                    <div className={styles["course-tag"]}>团课</div>
                   </div>
                 </div>
               )
@@ -135,31 +155,26 @@ const CoachAccount = () => {
         </div>
       </div>
 
-      <div className="footer-text">
+      <div className={styles["footer-text"]}>
         Be Studio 2025 All Rights Reserved
         <br />
       </div>
 
       {ruleOpen && (
-        <div className="rule-overlay">
-          <div className="rule-container">
-            <span className="rule-text">
-              会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
-              会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
-              会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
-              会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
-              会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
-              会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,{" "}
-            </span>
+        <div className={styles["rule-overlay"]}>
+          <div className={styles["rule-container"]}>
+            <span className={styles["rule-text"]}>{coach_rules}</span>
             <button
-              className="close-rule-button"
+              className={styles["close-rule-button"]}
               onClick={() => setRuleOpen(false)}
             >
-              <CgClose className="close-icon" />
+              <CgClose className={styles["close-icon"]} />
             </button>
           </div>
         </div>
       )}
+
+      {settingOpen && <AccountSetting setSettingOpen={setSettingOpen} />}
     </div>
   );
 };

@@ -1,64 +1,18 @@
-import React, { useState } from 'react';
-import './AdminTransaction.css';
-
-interface Transaction {
-  id: number;
-  memberName: string;
-  type: '充值' | '支出'; 
-  amount: number;
-  points: number;
-  peopleCount: number | '-';
-  course: {
-    name: string;
-    date: string;
-    time: string;
-  } | null;
-  transactionTime: string;
-}
-
-const mockTransactions: Transaction[] = [
-  {
-    id: 1,
-    memberName: '李小美',
-    type: '支出',
-    amount: 120,
-    points: 5,
-    peopleCount: 8,
-    course: {
-      name: '基础瑜伽',
-      date: '2025-04-22',
-      time: '18:00',
-    },
-    transactionTime: '2025-04-20 10:15',
-  },
-  {
-    id: 2,
-    memberName: '陈大强',
-    type: '充值',
-    amount: 80,
-    points: 0,
-    peopleCount: '-',
-    course: null,
-    transactionTime: '2025-04-19 14:00',
-  },
-  {
-    id: 3,
-    memberName: '黄丽娟',
-    type: '支出',
-    amount: 60,
-    points: 2,
-    peopleCount: 4,
-    course: {
-      name: '燃脂有氧',
-      date: '2025-04-18',
-      time: '20:00',
-    },
-    transactionTime: '2025-04-18 20:30',
-  },
-];
+import React, { useEffect, useState } from "react";
+import "./AdminTransaction.css";
+import axios from "axios";
 
 const AdminTransaction: React.FC = () => {
-  const [transactions] = useState<Transaction[]>(mockTransactions);
+  const [transactions, setTransactions] = useState<any[]>([]);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}admin/get-transaction.php`)
+      .then((res) => {
+        setTransactions(res.data.data);
+        console.log(res)
+      });
+  }, []);
 
   return (
     <div className="admin-transaction-container">
@@ -77,22 +31,25 @@ const AdminTransaction: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {transactions.map((t) => (
-            <tr key={t.id}>
-              <td>{t.id}</td>
-              <td>{t.memberName}</td>
-              <td className={t.type === '充值' ? 'income' : 'expense'}>{t.type}</td>
-              <td>{t.amount}</td>
-              <td>{t.points}</td>
-              <td>{t.peopleCount}</td>
-              <td>
-                {t.course
-                  ? `${t.course.name}（${t.course.date} ${t.course.time}）`
-                  : '-'}
-              </td>
-              <td>{t.transactionTime}</td>
-            </tr>
-          ))}
+          {transactions.length > 0 &&
+            transactions.map((t) => (
+              <tr key={t.transaction_id}>
+                <td>{t.transaction_id}</td>
+                <td>{t.member_name}</td>
+                <td className={t.type === "topup" ? "income" : "expense"}>
+                  {t.type === "topup" ? "充值" : "消费"}
+                </td>
+                <td>{t.amount}</td>
+                <td>{t.point||"-"}</td>
+                <td>{t.head_count||"-"}</td>
+                <td>
+                  {t.course_id
+                    ? `${t.course_name}（${t.start_time}）`
+                    : "-"}
+                </td>
+                <td>{t.time}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

@@ -1,0 +1,106 @@
+.course-container {
+  width: 100%;
+  margin: 0;
+  background-color: var(--background-dark);
+  height: 100%;
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+.header {
+  width: 100%;
+  background-color: var(--background-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-block: 12px;
+  border-radius: 0px 0px 12px 12px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+.header-text {
+  text-align: center;
+}
+
+/* 课程卡片 */
+.course-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.course-card {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.course-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.course-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, var(--secondary-color), transparent);
+  color: var(--text-color);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.course-time {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.course-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.course-difficulty {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.star {
+  color: #ccc;
+  margin-left: 4px;
+  font-size: 16px;
+}
+
+.star.filled {
+  color: orange;
+}
+
+.course-attend {
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.book-button {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  background-color: var(--accent-color);
+  color: white;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
