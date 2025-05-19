@@ -14,11 +14,12 @@ const EditingUser = ({
   const [phone, setPhone] = useState<any>(editingUser.phone);
   const [birthday, setBirthday] = useState<any>(editingUser.birthday);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [changePasswordMode, setChangePasswordMode] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
 
   useEffect(() => {
     console.log(editingUser);
-  }, [])
-  
+  }, []);
 
   const handleSave = () => {
     if (editingUser.id) {
@@ -53,71 +54,142 @@ const EditingUser = ({
 
   const handleDelete = () => {};
 
+  const handleChangePassword = () => {
+    if (newPassword.length < 8) {
+      alert("密码至少8位");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("action", "admin_change_password");
+    formData.append("phone", editingUser.phone);
+    formData.append("role", selectedRole);
+    formData.append("password_new", newPassword);
+
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}edit-profile.php`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((res) => {
+        if (res.data.success) {
+          alert("密码更新成功");
+          setNewPassword("");
+        } else {
+          alert(res.data.message || "更新失败");
+        }
+      })
+      .catch((err) => alert(err));
+  };
+
   return (
     <div className={styles["popup-overlay"]}>
       <div className={styles["popup-card"]}>
-        <h3>编辑{selectedRole == "student" ? "学生" : "教师"}资料</h3>
-        <form>
-          <div className={styles["edit-row"]}>
-            <label>姓名:</label>
-            <input
-              className={styles["form-input"]}
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
+        <div className={styles["header-row"]}>
+          <h3>
+            {changePasswordMode
+              ? "更改密码"
+              : `编辑${selectedRole === "student" ? "学生" : "教师"}资料`}
+          </h3>
+          <span
+            className={styles["change-toggle"]}
+            onClick={() => setChangePasswordMode(!changePasswordMode)}
+          >
+            {changePasswordMode ? "编辑资料" : "更改密码"}
+          </span>
+        </div>
+        {!changePasswordMode ? (
+          <form>
+            <div className={styles["edit-row"]}>
+              <label>姓名:</label>
+              <input
+                className={styles["form-input"]}
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className={styles["edit-row"]}>
-            <label>电话:</label>
-            <PhoneInput
-              placeholder=""
-              defaultCountry="MY"
-              value={phone}
-              onChange={setPhone}
-              className={styles["form-input"]}
-              required
-            />{" "}
-          </div>
+            <div className={styles["edit-row"]}>
+              <label>电话:</label>
+              <PhoneInput
+                placeholder=""
+                defaultCountry="MY"
+                value={phone}
+                onChange={setPhone}
+                className={styles["form-input"]}
+                required
+              />{" "}
+            </div>
 
-          <div className={styles["edit-row"]}>
-            <label>生日:</label>
-            <input
-              type="date"
-              className={styles["form-input"]}
-              value={birthday}
-              onChange={(e) => setBirthday(e.target.value)}
-              required
-            />
-          </div>
+            <div className={styles["edit-row"]}>
+              <label>生日:</label>
+              <input
+                type="date"
+                className={styles["form-input"]}
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className={styles["popup-actions"]}>
-            {editingUser.id != -1 && (
+            <div className={styles["popup-actions"]}>
+              {editingUser.id != -1 && (
+                <button
+                  type="button"
+                  className={clsx(styles.btn, styles.delete)}
+                  onClick={() => setDeleteConfirm(true)}
+                >
+                  删除用户
+                </button>
+              )}
               <button
                 type="button"
-                className={clsx(styles.btn, styles.delete)}
-                onClick={() => setDeleteConfirm(true)}
+                className={clsx(styles.btn, styles.confirm)}
+                onClick={() => handleSave()}
               >
-                删除用户
+                保存
               </button>
-            )}
-            <button
-              type="button"
-              className={clsx(styles.btn, styles.confirm)}
-              onClick={() => handleSave()}
-            >
-              保存
-            </button>
-            <button
-              type="button"
-              className={clsx(styles.btn, styles["close-btn"])}
-              onClick={handleClosePopup}
-            >
-              取消
-            </button>
-          </div>
-        </form>
+              <button
+                type="button"
+                className={clsx(styles.btn, styles["close-btn"])}
+                onClick={handleClosePopup}
+              >
+                取消
+              </button>
+            </div>
+          </form>
+        ) : (
+          <form className={styles["change-password-form"]}>
+            <div className={styles["edit-row"]}>
+              <label>新密码:</label>
+              <input
+                type="password"
+                className={styles["form-input"]}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="输入新密码（至少8位）"
+                required
+              />
+            </div>
+            <div className={styles["popup-actions"]}>
+              <button
+                type="button"
+                className={clsx(styles.btn, styles.confirm)}
+                onClick={handleChangePassword}
+              >
+                更新密码
+              </button>
+              <button
+                type="button"
+                className={clsx(styles.btn, styles["close-btn"])}
+                onClick={handleClosePopup}
+              >
+                取消
+              </button>
+            </div>
+          </form>
+        )}
       </div>
 
       {deleteConfirm && (

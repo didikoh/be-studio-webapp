@@ -1,9 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
-import { useUserStore } from "../../mocks/userStore";
-import { reservations } from "../../mocks/reservations";
 import { useAppContext } from "../../contexts/AppContext";
-import { useState } from "react";
-import { FiSettings } from "react-icons/fi";
+import { useEffect, useState } from "react";
 import { LuLogOut } from "react-icons/lu";
 import { CgClose } from "react-icons/cg";
 import styles from "./CoachAccount.module.css";
@@ -11,20 +8,43 @@ import { PiPen } from "react-icons/pi";
 import AccountSetting from "../../components/AccountSetting";
 import clsx from "clsx";
 import { coach_rules } from "../../assets/rules/rule";
+import axios from "axios";
 
 const CoachAccount = () => {
-  const { user, logout } = useAppContext();
+  const { user, logout, setPrevPage, setSelectedCourseId } = useAppContext();
   const navigate = useNavigate();
-  const [filterValue, setFilterValue] = useState("Booked");
+  const [filterValue, setFilterValue] = useState("0");
   const [ruleOpen, setRuleOpen] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
+  const [courses, setCourses] = useState<any[]>([]);
 
   const filters = [
-    { name: "已预约", value: "Booked" },
-    { name: "已收款", value: "Paid" },
-    { name: "进行中", value: "Ongoing" },
-    { name: "已完成", value: "Completed" },
+    { name: "已排程", value: "0" },
+    { name: "已收款", value: "1" },
+    { name: "进行中", value: "2" },
+    { name: "已完成", value: "3" },
   ];
+
+  const handleDetail = (course_id: any) => {
+    setPrevPage("/coach_account");
+    setSelectedCourseId(course_id);
+    navigate("/coach_coursedetail");
+  };
+
+  useEffect(() => {
+    console.log(user);
+    if (!user) {
+      return;
+    }
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}coach/coach-get-course.php`, {
+        user_id: user.id,
+      })
+      .then((res) => {
+        setCourses(res.data.courses);
+        console.log(res.data);
+      });
+  }, [user]);
 
   if (!user) {
     return (
@@ -123,9 +143,12 @@ const CoachAccount = () => {
           ))}
         </div>
         <div className={styles["account-couses-list"]}>
-          {reservations.map(
-            (item) =>
-              item.status === filterValue && (
+          {courses.filter((item) => item.state == filterValue).length === 0 ? (
+            <p style={{ padding: "1rem" }}>暂无记录</p>
+          ) : (
+            courses
+              .filter((item) => item.state == filterValue)
+              .map((item: any) => (
                 <div className={styles["course-card"]} key={item.id}>
                   <img
                     src="/assets/gallery1.jpg"
@@ -133,24 +156,41 @@ const CoachAccount = () => {
                     className={styles["course-bg"]}
                   />
                   <div className={styles["course-overlay"]}>
-                    <h3 className={styles["course-title"]}>
-                      Aerial Music Flow
-                    </h3>
+                    <h3 className={styles["course-title"]}>{item.name}</h3>
                     <p className={styles["course-info"]}>
-                      R*-ui老师 ｜ 空中教室
+                      {item.coach}老师 ｜ {item.location}
                     </p>
                     <p className={styles["course-duration"]}>
-                      课程时长 <strong>60</strong> 分钟
+                      课程时长 <strong>{item.duration}</strong> 分钟
                     </p>
                     <p className={styles["course-difficulty"]}>
-                      课程难度
-                      <span className={styles["stars"]}>⭐ ⭐</span>
+                      课程难度{" "}
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                          key={star}
+                          className={
+                            star <= item.difficulty
+                              ? styles["star-filled"]
+                              : styles["star"]
+                          }
+                        >
+                          ★
+                        </span>
+                      ))}
                     </p>
-                    <button className={styles["book-button"]}>立即预约</button>
-                    <div className={styles["course-tag"]}>团课</div>
+                    <p className={styles["course-duration"]}>
+                      预约人数 <strong>{item.booking_count}</strong> 人
+                    </p>
+                    {/* 根据预约状态渲染按钮或标签 */}
+                    <button
+                      className={styles["book-button"]}
+                      onClick={() => handleDetail(item.id)}
+                    >
+                      查看课程
+                    </button>
                   </div>
                 </div>
-              )
+              ))
           )}
         </div>
       </div>

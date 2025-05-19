@@ -253,9 +253,16 @@
   font-size: 0.9rem;
 }
 
-.stars {
-  margin-left: 8px;
+.star {
+  color: #000;
+  margin-left: 4px;
+  font-size: 16px;
+}
+
+.star-filled {
   color: gold;
+  margin-left: 4px;
+  font-size: 16px;
 }
 
 .course-tag {

@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
-import { Course, mockCourses } from "../../mocks/courses";
 import styles from "./AdminCourse.module.css";
 import clsx from "clsx";
 import axios from "axios";
+import { useAppContext } from "../../contexts/AppContext";
+import { useNavigate } from "react-router-dom";
+
+const filter = [
+  { name: "老师", value: "name" },
+  { name: "课程", value: "course" },
+];
 
 const formatStartTime = (start_time: string) => {
   const dateObj = new Date(start_time); // 自动解析 "2025-05-15 06:23:00"
@@ -25,6 +31,8 @@ const formatStartTime = (start_time: string) => {
 };
 
 const AdminCourse = () => {
+  const navigate = useNavigate();
+  const { setPrevPage, setSelectedCourseId } = useAppContext();
   const [courses, setCourses] = useState<any>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [courseForm, setCourseForm] = useState({
@@ -43,11 +51,12 @@ const AdminCourse = () => {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [filterDate, setFilterDate] = useState("");
+  const [filterType, setFilterType] = useState("coach"); // 默认老师
 
   const fetchCourses = async () => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/admin/get-course.php`
+        `${import.meta.env.VITE_API_BASE_URL}admin/get-course.php`
       );
       console.log(res);
       if (res.data.success) {
@@ -160,6 +169,12 @@ const AdminCourse = () => {
     }
   };
 
+  const handleView = (course: any) => {
+    setPrevPage("/admin_course");
+    setSelectedCourseId(course.id);
+    navigate("/coach_coursedetail");
+  };
+
   return (
     <div className={styles["container"]}>
       <div className={styles["header"]}>
@@ -168,12 +183,24 @@ const AdminCourse = () => {
 
       <div className={styles["filter"]}>
         <div className={styles["filter-left"]}>
+          <select
+            className={styles["member-type-dropdown"]}
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+          >
+            {filter.map((f) => (
+              <option key={f.value} value={f.value}>
+                {f.name}
+              </option>
+            ))}
+          </select>
           <input
             type="text"
-            placeholder="课程名称"
+            placeholder="搜索"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />
+
           <input
             type="date"
             value={filterDate}
@@ -199,6 +226,7 @@ const AdminCourse = () => {
             <th>老师</th>
             <th>日期</th>
             <th>时间</th>
+            <th>状态</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -206,13 +234,24 @@ const AdminCourse = () => {
           {courses &&
             courses
               .filter((c: any) => {
-                const matchKeyword = c.name
-                  .toLowerCase()
-                  .includes(keyword.toLowerCase());
-
+                // 日期过滤
                 const matchDate = filterDate
-                  ? c.start_time.startsWith(filterDate) // "2025-05-15 06:23:00".startsWith("2025-05-15")
+                  ? c.start_time.startsWith(filterDate)
                   : true;
+
+                // 关键字过滤，区分老师/课程
+                let matchKeyword = true;
+                if (keyword.trim()) {
+                  if (filterType === "coach") {
+                    matchKeyword = c.coach
+                      ?.toLowerCase()
+                      .includes(keyword.toLowerCase());
+                  } else if (filterType === "course") {
+                    matchKeyword = c.name
+                      ?.toLowerCase()
+                      .includes(keyword.toLowerCase());
+                  }
+                }
 
                 return matchKeyword && matchDate;
               })
@@ -223,16 +262,55 @@ const AdminCourse = () => {
                     {c.price}/{c.price_m}
                   </td>
                   <td>{c.min_book}</td>
-                  <td>100</td>
+                  <td>{c.booking_count}</td>
                   <td>{c.coach}</td>
                   <td>{formatStartTime(c.start_time).dateStr}</td>
                   <td>{formatStartTime(c.start_time).timeStr}</td>
+                  <td
+                    style={{
+                      color: (() => {
+                        switch (c.state) {
+                          case -1:
+                            return "#dc3545";
+                          case 0:
+                            return "#28a745";
+                          case 1:
+                            return "#ffc107";
+                          case 2:
+                            return "#6c757d";
+                          default:
+                            return "#000";
+                        }
+                      })(),
+                    }}
+                  >
+                    {(() => {
+                      switch (c.state) {
+                        case -1:
+                          return "已取消";
+                        case 0:
+                          return "已排程";
+                        case 1:
+                          return "已开始";
+                        case 2:
+                          return "已结束";
+                        default:
+                          return "Unknown";
+                      }
+                    })()}
+                  </td>
                   <td className={styles["action-buttons"]}>
                     <button
                       className={clsx(styles.btn, styles.edit)}
                       onClick={() => handleEdit(c)}
                     >
                       编辑
+                    </button>
+                    <button
+                      className={clsx(styles.btn, styles.edit)}
+                      onClick={() => handleView(c)}
+                    >
+                      查看
                     </button>
                   </td>
                 </tr>
@@ -348,12 +426,8 @@ const AdminCourse = () => {
                   onChange={handleChange}
                   required
                 >
-                  <option value="Level 2">
-                    Level 2
-                  </option>
-                  <option value="Level 3">
-                    Level 3
-                  </option>
+                  <option value="Level 2">Level 2</option>
+                  <option value="Level 3">Level 3</option>
                 </select>
               </div>
 

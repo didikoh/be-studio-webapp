@@ -8,7 +8,7 @@ import clsx from "clsx";
 
 const Schedule = () => {
   const navigate = useNavigate();
-  const { user, setSelectedCourse } = useAppContext();
+  const { user, setSelectedCourseId, setPrevPage } = useAppContext();
   const [courses, setCourses] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState(dayjs());
 
@@ -21,21 +21,24 @@ const Schedule = () => {
   };
 
   useEffect(() => {
+    const phone = user ? user.phone : null;
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}get-course.php`, {
-        phone: user.phone,
+        phone: phone,
       })
       .then((res) => {
+        console.log(res);
         if (res.data.courses) {
           setCourses(res.data.courses);
         }
 
-        console.log(res.data);
+        // console.log(res.data);
       });
-  }, []);
+  }, [user]);
 
   const bookBtnClickHandler = (course: any) => {
-    setSelectedCourse(course);
+    setPrevPage("/schedule");
+    setSelectedCourseId(course.id);
     navigate("/coursedetail");
   };
 
@@ -70,9 +73,7 @@ const Schedule = () => {
                 className={styles["course-bg"]}
               />
               <div className={styles["course-overlay"]}>
-                <div className={styles["course-time"]}>
-                  {course.start_time + "-"}
-                </div>
+                <div className={styles["course-time"]}>{course.start_time}</div>
                 <div className={styles["course-header"]}>
                   <div className={styles["course-title"]}>{course.name}</div>
                 </div>
@@ -111,11 +112,6 @@ const Schedule = () => {
                       ★
                     </span>
                   ))}
-                </div>
-                <div className={styles["course-attend"]}>
-                  <span className={styles["attend-count"]}>
-                    已预约人数：{course.booking_count}
-                  </span>
                 </div>
                 <div className={styles["course-attend"]}>
                   <span className={styles["attend-count"]}>

@@ -5,17 +5,17 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Course } from "../mocks/courses";
 import axios from "axios";
 
 const AppContext = createContext<any>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<any>(null);
-  const [selectedCourse, setSelectedCourse] = useState<any>(null);
+  const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectedPage, setSelectedPage] = useState("home");
-  const [loading, setLoading] = useState(false);
+  const [prevPage, setPrevPage] = useState("/home");
+  const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
@@ -26,6 +26,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       .then((res) => {
         console.log(res.data);
         setUser(res.data.profile);
+        setLoading(false);
       })
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
@@ -41,18 +42,20 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   return (
     <AppContext.Provider
       value={{
-        selectedCourse,
-        setSelectedCourse,
+        setSelectedCourseId,
+        selectedCourseId,
         user,
         setUser,
         selectedPage,
         setSelectedPage,
+        prevPage,
+        setPrevPage,
         selectedEvent,
         setSelectedEvent,
         logout,
         loading,
         setLoading,
-        setRefreshKey
+        setRefreshKey,
       }}
     >
       {children}

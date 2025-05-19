@@ -3,14 +3,10 @@ import { CgClose } from "react-icons/cg";
 import styles from "./AccountSetting.module.css";
 import axios from "axios";
 import { useAppContext } from "../contexts/AppContext";
-import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { isValidPhoneNumber } from "react-phone-number-input";
-import PhoneInput from "react-phone-number-input/input";
 
 const AccountSetting = ({ setSettingOpen }: any) => {
-  const navigate = useNavigate();
-  const { user, setRefreshKey, logout } = useAppContext();
+  const { user, setRefreshKey, logout, setLoading } = useAppContext();
   // 定义表单状态
   const [name, setName] = useState(user.name || "");
   const [birthday, setBirthday] = useState(user.birthday || "");
@@ -37,16 +33,19 @@ const AccountSetting = ({ setSettingOpen }: any) => {
     formData.append("birthday", birthday);
     formData.append("phone", user.phone);
     formData.append("action", "edit");
+    formData.append("role", user.role);
 
     if (profilePic) {
       formData.append("profile_pic", profilePic);
     }
 
     try {
+      setLoading(true);
       const res = await axios.post(`${baseUrl}edit-profile.php`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true, // ✅ 必须加这个，才能存 session
       });
+      setLoading(false);
 
       if (res.data.success) {
         setSettingOpen(false);

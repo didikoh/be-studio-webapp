@@ -44,7 +44,22 @@
   font-weight: bold;
 }
 
+.activate{
+  color: #a7a728;
+  font-weight: bold;
+}
+
 .expense {
   color: #d9534f;
   font-weight: bold;
+}
+
+.btn-action {
+  padding: 6px 12px;
+  margin-right: 6px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  background-color: var(--accent-light);
 }

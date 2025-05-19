@@ -1,12 +1,10 @@
 import React from "react";
 import styles from "./AdminAccount.module.css";
-import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../contexts/AppContext";
 import clsx from "clsx";
 
 const AdminAccount: React.FC = () => {
-  const navigate = useNavigate();
-  const { user, logout, setSelectedPage } = useAppContext();
+  const { user, logout } = useAppContext();
 
   if (user == null) {
     return <div>请先登录</div>;

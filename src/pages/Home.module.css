@@ -162,6 +162,8 @@
 }
 
 .join-us {
+  border:none;
+  background: none;
   text-align: center;
   font-size: 2rem;
   font-weight: bold;
@@ -213,10 +215,16 @@
 
 .appointment-list {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .courses-list {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .course-card {
@@ -260,9 +268,16 @@
   font-size: 0.9rem;
 }
 
-.stars {
-  margin-left: 8px;
+.star {
+  color: #000;
+  margin-left: 4px;
+  font-size: 16px;
+}
+
+.star-filled {
   color: gold;
+  margin-left: 4px;
+  font-size: 16px;
 }
 
 .book-btn {

@@ -1,6 +1,4 @@
 // src/pages/PrivacyPolicy.tsx
-import React from "react";
-
 const PrivacyPolicy = () => {
   return (
     <div className="container py-4">

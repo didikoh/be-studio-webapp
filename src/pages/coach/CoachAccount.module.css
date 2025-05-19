@@ -74,7 +74,7 @@
   background: #ccc;
   border-radius: 50%;
   margin-right: 10px;
-  img{
+  img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -219,6 +219,13 @@
   gap: 15px;
 }
 
+.account-couses-list {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
 .course-card {
   position: relative;
   width: 100%;
@@ -253,9 +260,16 @@
   font-size: 0.9rem;
 }
 
-.stars {
-  margin-left: 8px;
+.star {
+  color: #000;
+  margin-left: 4px;
+  font-size: 16px;
+}
+
+.star-filled {
   color: gold;
+  margin-left: 4px;
+  font-size: 16px;
 }
 
 .course-tag {
@@ -318,11 +332,12 @@
   display: block;
 }
 
-.join-us{
+.join-us {
   font-style: italic;
   color: var(--accent-color);
   text-decoration: underline;
 }
+
 .book-button {
   position: absolute;
   right: 15px;
@@ -336,4 +351,3 @@
   font-weight: bold;
   cursor: pointer;
 }
-

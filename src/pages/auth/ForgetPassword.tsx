@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./ForgetPassword.module.css";
 import { useNavigate } from "react-router-dom";
 import { CgClose } from "react-icons/cg";

@@ -5,14 +5,15 @@ import { useAppContext } from "../../contexts/AppContext";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import PhoneInput from "react-phone-number-input/input";
 import axios from "axios";
+import { CgClose } from "react-icons/cg";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUser } = useAppContext();
+  const { setUser, setSelectedPage } = useAppContext();
 
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  // const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -38,17 +39,16 @@ const Login = () => {
     try {
       const res = await axios.post(`${baseUrl}auth-login.php`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true  // ✅ 必须加这个，才能存 session
+        withCredentials: true, // ✅ 必须加这个，才能存 session
       });
 
       console.log(res.data);
 
       if (res.data.success) {
         setUser(res.data.profile);
-      }else{
+      } else {
         setError(res.data.message);
       }
-
     } catch (err: any) {
       setError(err.message);
       console.error(err);
@@ -59,6 +59,15 @@ const Login = () => {
     <div className={styles["login-container"]}>
       <div className={styles["login-content"]}>
         <h1 className={styles["login-title"]}>登录 be studio</h1>
+        <button
+          className={styles.closeBtn}
+          onClick={() => {
+            setSelectedPage("home");
+            navigate("/home");
+          }}
+        >
+          <CgClose />
+        </button>
         {error && <div className={styles["login-error"]}>{error}</div>}
         <form onSubmit={handleLogin} className={styles["login-form"]}>
           <PhoneInput

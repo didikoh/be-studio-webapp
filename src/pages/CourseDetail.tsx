@@ -8,16 +8,74 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 import axios from "axios";
 
 const CourseDetail = () => {
-  const { selectedCourse, user } = useAppContext();
+  const { selectedCourseId, user, prevPage, setRefreshKey } = useAppContext();
   const navigate = useNavigate();
   const [bookpopupVisible, setBookPopupVisible] = useState(false);
   const [bookPeopleCount, setBookPeopleCount] = useState(1);
+  const [selectedCourse, setSelectedCourse] = useState<any>(null);
+  const [isbooked, setIsbooked] = useState(false);
+  const [headCount, setHeadCount] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  useEffect(() => {
+    if (!selectedCourse) return;
+
+    console.log("计算总价");
+    const total_price =
+      user && user.package == null
+        ? selectedCourse.price * bookPeopleCount
+        : selectedCourse.price_m * bookPeopleCount;
+    setTotalPrice(total_price);
+  }, [bookPeopleCount, user, selectedCourse]);
+
+  useEffect(() => {
+    console.log(selectedCourseId);
+    if (!selectedCourseId) {
+      return;
+    }
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}get-course-detail.php`, {
+        course_id: selectedCourseId,
+        student_id: user ? user.id : null, // 如果用户未登录，传 null 或不传
+      })
+      .then((res) => {
+        console.log(res.data);
+        setSelectedCourse(res.data.course);
+        if (res.data.is_booked) {
+          setIsbooked(res.data.is_booked);
+        }
+        if (res.data.head_count) {
+          setHeadCount(res.data.head_count);
+        }
+      });
+  }, [selectedCourseId, user]);
 
   const handleBackButtonClick = () => {
-    navigate("/schedule");
+    navigate(prevPage);
   };
 
   const handleBook = async () => {
+    if (!user) {
+      alert("请先登录");
+      navigate("/login");
+      return;
+    }
+
+    const availableBalance = user.balance - user.frozen_balance;
+    console.log("用户:", user);
+    console.log(
+      "可用余额:",
+      availableBalance,
+      "=",
+      user.balance,
+      user.frozen_balance
+    );
+
+    if (availableBalance < totalPrice) {
+      alert("余额不足，请充值");
+      return;
+    }
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}book.php`,
@@ -25,12 +83,13 @@ const CourseDetail = () => {
           student_id: user.id,
           course_id: selectedCourse.id,
           head_count: bookPeopleCount,
+          frozen_price: totalPrice,
         }
       );
 
       if (response.data.success) {
         alert("预约成功");
-        navigate("/schedule");
+        setRefreshKey((prev: any) => prev + 1);
       } else {
         alert(response.data.message);
       }
@@ -136,26 +195,38 @@ const CourseDetail = () => {
             会员价：
             <span>RM{selectedCourse.price_m}</span>
           </div>
-          <div className={styles.infoRow}>
-            预约人数：
-            <div className={styles.peopleCount}>
-              {user.package != "promotion" && (
-                <button
-                  onClick={() =>
-                    setBookPeopleCount(Math.max(1, bookPeopleCount - 1))
-                  }
-                >
-                  <FaMinus />
-                </button>
-              )}
-              <span>{bookPeopleCount}</span>
-              {user.package != "promotion" && (
-                <button onClick={() => setBookPeopleCount(bookPeopleCount + 1)}>
-                  <FaPlus />
-                </button>
-              )}
+          {!isbooked && (
+            <div className={styles.infoRow}>
+              预约人数：
+              <div className={styles.peopleCount}>
+                {user && user.package != "promotion" && (
+                  <button
+                    onClick={() =>
+                      setBookPeopleCount(Math.max(1, bookPeopleCount - 1))
+                    }
+                  >
+                    <FaMinus />
+                  </button>
+                )}
+                <span>{bookPeopleCount}</span>
+                {user && user.package != "promotion" && (
+                  <button
+                    onClick={() => setBookPeopleCount(bookPeopleCount + 1)}
+                  >
+                    <FaPlus />
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          )}
+          {isbooked && (
+            <div className={styles.infoRow}>
+              已预约人数：
+              <div className={styles.peopleCount}>
+                <span>{headCount}</span>
+              </div>
+            </div>
+          )}
           {/* <div className={styles.infoRow}>
             预约备注：
             <input placeholder="请填写备注" maxLength={200} />
@@ -166,9 +237,9 @@ const CourseDetail = () => {
         <button
           className={styles.detailBookButton}
           onClick={() => setBookPopupVisible(true)}
-          disabled={selectedCourse.is_booked}
+          disabled={isbooked}
         >
-          {selectedCourse.is_booked ? "已预约" : "立即预约"}{" "}
+          {isbooked ? "已预约" : "立即预约"}{" "}
         </button>
       </div>
 
@@ -179,6 +250,13 @@ const CourseDetail = () => {
             <p>课程名称: {selectedCourse.name}</p>
             <p>时间: {selectedCourse.start_time}</p>
             <p>人数: {bookPeopleCount} 人</p>
+            <p>
+              单价: RM{" "}
+              {user?.package == null
+                ? selectedCourse.price
+                : selectedCourse.price_m}
+            </p>
+            <p>总价: RM {totalPrice}</p>
             <div className={styles.popupBtns}>
               <button
                 onClick={() => {

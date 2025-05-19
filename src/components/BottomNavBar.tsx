@@ -2,7 +2,6 @@
 import {
   FaHome,
   FaClock,
-  FaShoppingBag,
   FaUser,
   FaCalendar,
   FaWallet,

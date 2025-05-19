@@ -1,15 +1,29 @@
-import { mockCourses } from "../../mocks/courses";
 import classes from "./CoachCourse.module.css";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../contexts/AppContext";
-import clsx from "clsx";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const CoachCourse = () => {
   const navigate = useNavigate();
-  const { setSelectedCourse } = useAppContext();
+  const { setSelectedCourseId, user, setPrevPage } = useAppContext();
+  const [courses, setCourses] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!user) return;
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}coach/coach-get-course.php`, {
+        user_id: user.id,
+      })
+      .then((response) => {
+        // console.log(response.data);
+        setCourses(response.data.courses);
+      });
+  }, [user]);
 
   const handleDetail = (course: any) => {
-    setSelectedCourse(course);
+    setPrevPage("/coach_course");
+    setSelectedCourseId(course.id);
     navigate("/coach_coursedetail");
   };
 
@@ -26,6 +40,7 @@ const CoachCourse = () => {
 
     return `${format(today)} ~ ${format(sevenDaysLater)}`;
   };
+
   return (
     <div className={classes["course-container"]}>
       <div className={classes["header"]}>
@@ -36,73 +51,76 @@ const CoachCourse = () => {
         </div>
       </div>
       <div className={classes["course-list"]}>
-        {mockCourses.map((course) => course.instructor === "Ivy Tan" && (
-          <div
-            className={clsx(
-              classes["course-card"],
-            )}
-            key={course.id}
-          >
-            <img
-              src={course.image}
-              alt="课程背景"
-              className={classes["course-bg"]}
-            />
-            <div className={classes["course-overlay"]}>
-              <div className={classes["course-time"]}>
-                {course.startTime + "-" + course.endTime}
-              </div>
-              <div className={classes["course-header"]}>
-                <div className={classes["course-title"]}>{course.name}</div>
-              </div>
-              <div className={classes["course-info"]}>
-                <span>{course.instructor}</span>
-                <span> | </span>
-                <span>{course.location}</span>
-              </div>
-              <div className={classes["course-difficulty"]}>
-                课程难度：
-                {[1, 2, 3].map((star) => (
-                  <span
-                    key={star}
-                    className={
-                      star <= course.difficulty
-                        ? clsx(
-                            classes["star"],
-                            classes["star-filled"]
-                          )
-                        : classes["star"]
-                    }
-                  >
-                    ★
+        {courses &&
+          courses.map((course) => (
+            <div className={classes["course-card"]} key={course.id}>
+              <img
+                src={course.image || "./assets/gallery1.jpg"}
+                alt="课程背景"
+                className={classes["course-bg"]}
+              />
+              <div className={classes["course-overlay"]}>
+                <div className={classes["course-time"]}>
+                  {course.start_time}
+                </div>
+                <div className={classes["course-header"]}>
+                  <div className={classes["course-title"]}>{course.name}</div>
+                </div>
+                <div className={classes["course-info"]}>
+                  <span>{course.coach}</span>
+                  <span> | </span>
+                  <span>{course.location || "暂无课室"}</span>
+                </div>
+                <div className={classes["course-attend"]}>
+                  <span className={classes["attend-count"]}>
+                    已预约人数：{course.booking_count}
                   </span>
-                ))}
+                </div>
+                <div className={classes["course-attend"]}>
+                  <span className={classes["attend-count"]}>
+                    普通价：RM{" " + course.price}
+                  </span>
+                </div>
+                <div className={classes["course-attend"]}>
+                  <span className={classes["attend-count"]}>
+                    会员价：RM
+                    {" " + course.price_m}
+                  </span>
+                </div>
+                <div className={classes["course-difficulty"]}>
+                  课程难度：
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                      key={star}
+                      className={
+                        star <= course.difficulty
+                          ? classes["star-filled"]
+                          : classes["star"]
+                      }
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+                <div className={classes["course-attend"]}>
+                  <span className={classes["attend-count"]}>
+                    需开班人数：{course.min_book}
+                  </span>
+                </div>
+                <button
+                  className={classes["book-button"]}
+                  onClick={() => {
+                    handleDetail(course);
+                  }}
+                >
+                  查看详情
+                </button>
               </div>
-              <div className={classes["course-attend"]}>
-                <span className={classes["attend-count"]}>
-                  已预约人数：{course.bookedCount}
-                </span>
-              </div>
-              <div className={classes["course-attend"]}>
-                <span className={classes["attend-count"]}>
-                  需开班人数：{course.minCapacity}
-                </span>
-              </div>
-              <button
-                className={classes["book-button"]}
-                onClick={() => {
-                  handleDetail(course);
-                }}
-              >
-                课程详细
-              </button>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );
 };
 
 export default CoachCourse;
-
