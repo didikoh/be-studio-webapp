@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../contexts/AppContext";
 import axios from "axios";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 const Schedule = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation("schedule");
   const { user, setSelectedCourseId, setPrevPage } = useAppContext();
   const [courses, setCourses] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -21,10 +23,9 @@ const Schedule = () => {
   };
 
   useEffect(() => {
-    const phone = user ? user.phone : null;
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}get-course.php`, {
-        phone: phone,
+        id: user ? user.id : null,
       })
       .then((res) => {
         console.log(res);
@@ -69,7 +70,7 @@ const Schedule = () => {
             <div className={styles["course-card"]} key={course.id}>
               <img
                 src={course.image || "./assets/gallery1.jpg"}
-                alt="课程背景"
+                alt="course background"
                 className={styles["course-bg"]}
               />
               <div className={styles["course-overlay"]}>
@@ -80,26 +81,26 @@ const Schedule = () => {
                 <div className={styles["course-info"]}>
                   <span>{course.coach}</span>
                   <span> | </span>
-                  <span>{course.location || "暂无课室"}</span>
+                  <span>{course.location || t("locationDefault")}</span>
                 </div>
                 <div className={styles["course-attend"]}>
                   <span className={styles["attend-count"]}>
-                    已预约人数：{course.booking_count}
+                    {t("bookedCount")}：{course.booking_count}
                   </span>
                 </div>
                 <div className={styles["course-attend"]}>
                   <span className={styles["attend-count"]}>
-                    普通价：RM{" " + course.price}
+                    {t("regularPrice")}：RM{" " + course.price}
                   </span>
                 </div>
                 <div className={styles["course-attend"]}>
                   <span className={styles["attend-count"]}>
-                    会员价：RM
+                    {t("memberPrice")}：RM
                     {" " + course.price_m}
                   </span>
                 </div>
                 <div className={styles["course-difficulty"]}>
-                  课程难度：
+                  {t("difficulty")}：
                   {[1, 2, 3, 4, 5].map((star) => (
                     <span
                       key={star}
@@ -115,7 +116,7 @@ const Schedule = () => {
                 </div>
                 <div className={styles["course-attend"]}>
                   <span className={styles["attend-count"]}>
-                    需开班人数：{course.min_book}
+                    {t("minBook")}：{course.min_book}
                   </span>
                 </div>
                 <button
@@ -124,13 +125,13 @@ const Schedule = () => {
                     bookBtnClickHandler(course);
                   }}
                 >
-                  {course.is_booked ? "已预约" : "立即预约"}
+                  {course.is_booked ? t("alreadyBooked") : t("bookNow")}
                 </button>
               </div>
             </div>
           ))
         ) : (
-          <p>当天没有课程</p>
+          <p>{t("noCourse")}</p>
         )}
       </div>
     </div>

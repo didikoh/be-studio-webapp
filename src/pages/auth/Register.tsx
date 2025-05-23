@@ -7,14 +7,18 @@ import { isValidPhoneNumber } from "react-phone-number-input/input";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { useAppContext } from "../../contexts/AppContext";
+import { useTranslation } from "react-i18next";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
 
 const Register = () => {
+  const { t } = useTranslation("login");
   const navigate = useNavigate();
   const { setUser } = useAppContext();
   // 定义表单状态
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [birthday, setBirthday] = useState("");
+  const [birthday, setBirthday] = useState<Date | null>(null);
   const [profilePic, setProfilePic] = useState<File | null>(null);
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
@@ -30,40 +34,40 @@ const Register = () => {
     e.preventDefault();
 
     if (!isValidPhoneNumber(phone)) {
-      alert("请输入正确的电话号码！");
+      alert(t("validatePhone"));
       return;
     }
 
     if (password.length < 8) {
-      alert("密码至少8位，请重新输入");
+      alert(t("validatePassword"));
       return;
     }
 
     if (password !== password2) {
-      alert("两次密码不一致，请重新输入");
+      alert(t("register.validateConfirmPassword"));
       return;
     }
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("phone", phone);
-    formData.append("birthday", birthday);
-    formData.append("password", password);
-    if (profilePic) {
-      formData.append("profile_pic", profilePic);
-    }
+    const formData = {
+      name,
+      phone,
+      birthday: birthday ? birthday.toISOString().slice(0, 10) : "", // 转 "yyyy-mm-dd"
+      password,
+      ...(profilePic && { profile_pic: profilePic }),
+    };
 
     try {
       const res = await axios.post(`${baseUrl}auth-register.php`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "application/json" },
         withCredentials: true, // ✅ 必须加这个，才能存 session
       });
-
+      if (res.data.success) {
+        setUser(res.data.profile);
+      }
       setResponseMsg(res.data.message);
-      setUser(res.data.profile);
     } catch (err: any) {
       console.error(err);
-      setResponseMsg(err.response?.data?.message || "网络错误");
+      setResponseMsg(err.response?.data?.message || "Network Error");
     }
 
     // 提交后跳转或发请求
@@ -75,7 +79,7 @@ const Register = () => {
     <div className={styles.overlay}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h3>账号注册</h3>
+          <h3>{t("register.title")}</h3>
           <div
             className={styles.close}
             onClick={() => {
@@ -89,7 +93,7 @@ const Register = () => {
         <form className={styles.form} onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="名字"
+            placeholder={t("register.name")}
             value={name}
             onChange={(e) => setName(e.target.value)}
             className={styles["form-input"]}
@@ -97,7 +101,7 @@ const Register = () => {
           />
 
           <PhoneInput
-            placeholder="电话号码"
+            placeholder={t("register.phone")}
             defaultCountry="MY"
             value={phone}
             onChange={(value) => setPhone(value || "")}
@@ -105,23 +109,23 @@ const Register = () => {
             required
           />
 
-          <input
-            type="text"
-            placeholder="生日"
-            value={birthday}
-            onFocus={(e) => (e.target.type = "date")}
-            onBlur={(e) => {
-              if (!e.target.value) e.target.type = "text";
-            }}
-            onChange={(e) => setBirthday(e.target.value)}
+          <DatePicker
+            selected={birthday}
+            onChange={(date: Date | null) => setBirthday(date)}
+            placeholderText={t("register.birthday")}
+            dateFormat="yyyy-MM-dd"
             className={styles["form-input"]}
+            maxDate={new Date()} // 生日最大为今天
+            showYearDropdown
+            scrollableYearDropdown
+            yearDropdownItemNumber={100}
             required
           />
 
           <div className={styles["form-row"]}>
             <input
               type={show ? "text" : "password"}
-              placeholder="密码(最少8位)"
+              placeholder={t("register.password")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={styles["form-input"]}
@@ -136,7 +140,7 @@ const Register = () => {
           <div className={styles["form-row"]}>
             <input
               type={show2 ? "text" : "password"}
-              placeholder="确认密码"
+              placeholder={t("register.confirmPassword")}
               value={password2}
               onChange={(e) => setPassword2(e.target.value)}
               className={styles["form-input"]}
@@ -160,13 +164,13 @@ const Register = () => {
 
           <input
             type="text"
-            placeholder="上传头像（可选）"
+            placeholder={t("register.uploadAvatar")}
             defaultValue={profilePic ? profilePic.name : ""}
             onClick={() => fileInputRef.current?.click()}
             className={styles["form-input"]}
           />
-          <button type="submit">提交</button>
-          {responseMsg && <p>{responseMsg}</p>}
+          <button type="submit">{t("register.submit")}</button>
+          {responseMsg && <p className={styles["text-error"]}>{responseMsg}</p>}
         </form>
       </div>
     </div>

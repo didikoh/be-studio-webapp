@@ -8,9 +8,11 @@ import AccountSetting from "../components/AccountSetting";
 import { PiPen } from "react-icons/pi";
 import clsx from "clsx";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const Account = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation("account");
   const { user, logout, setPrevPage, setSelectedCourseId } = useAppContext();
   const [filterValue, setFilterValue] = useState("booked");
   const [ruleOpen, setRuleOpen] = useState(false);
@@ -18,15 +20,15 @@ const Account = () => {
   const [courses, setCourses] = useState<any[]>([]);
 
   const filters = [
-    { name: "已预约", value: "booked" },
-    { name: "已付款", value: "paid" },
-    { name: "进行中", value: "ongoing" },
-    { name: "已完成", value: "completed" },
+    { name: t("booked"), value: "booked" },
+    { name: t("paid"), value: "paid" },
+    { name: t("ongoing"), value: "ongoing" },
+    { name: t("completed"), value: "completed" },
   ];
 
   const joinUs = () => {
     const phone = "60177615676"; // 改成你自己的手机号（马来西亚手机号前面加60）
-    const message = "你好，我想加入会员";
+    const message = t("joinUsWhatsapp");
     const encodedMessage = encodeURIComponent(message);
     const url = `https://wa.me/${phone}?text=${encodedMessage}`;
 
@@ -46,7 +48,6 @@ const Account = () => {
       })
       .then((res) => {
         setCourses(res.data.bookings);
-        console.log(res.data);
       });
   }, [user]);
 
@@ -62,9 +63,9 @@ const Account = () => {
         className={clsx(styles["account-container"], styles["not-logged-in"])}
       >
         <div className={styles["account-box"]}>
-          <p>尚未登录</p>
+          <p>{t("notLoggedIn")}</p>
           <Link to="/login" className={styles["login-link"]}>
-            去登录
+            {t("login")}
           </Link>
         </div>
       </div>
@@ -114,16 +115,18 @@ const Account = () => {
 
       <div className={styles["account-stats-section"]}>
         <div className={styles["stat-item"]}>
-          <div className={styles["stat-label"]}>我的余额</div>
+          <div className={styles["stat-label"]}>{t("myBalance")}</div>
           <div className={styles["stat-value"]}>
             RM {user.balance}
-            {" {"}
-            {user.frozen_balance}
-            {"}"}{" "}
+            <span className={styles["frozenBalance"]}>
+              {" ("}
+              {user.frozen_balance}
+              {")"}{" "}
+            </span>
           </div>
         </div>
         <div className={clsx(styles["stat-item"], styles["right"])}>
-          <div className={styles["stat-label"]}>我的积分</div>
+          <div className={styles["stat-label"]}>{t("myPoint")}</div>
           <div className={styles["stat-value"]}>{user.point}</div>
         </div>
       </div>
@@ -132,24 +135,26 @@ const Account = () => {
         <div className={styles["stat-item"]}>
           {user.package != null ? (
             <>
-              <div className={styles["stat-label"]}>会员截至</div>
+              <div className={styles["stat-label"]}>{t("memberUntil")}</div>
               <div className={styles["stat-value"]}>{user.expire_date}</div>
             </>
           ) : (
             <>
-              <div className={styles["stat-label"]}>不是会员？</div>
+              <div className={styles["stat-label"]}>{t("notMember")}</div>
               <div
                 className={clsx(styles["stat-value"], styles["join-us"])}
                 onClick={joinUs}
               >
-                加入我们
+                {t("joinUs")}
               </div>
             </>
           )}
         </div>
         <div className={clsx(styles["stat-item"], styles["right"])}>
-          <div className={styles["stat-label"]}>本周学习</div>
-          <div className={styles["stat-value"]}>0 分钟</div>
+          <div className={styles["stat-label"]}>{t("studyThisWeek")}</div>
+          <div className={styles["stat-value"]}>
+            {`0 `} {t("minutes")}
+          </div>
         </div>
       </div>
 
@@ -161,7 +166,7 @@ const Account = () => {
               setRuleOpen(true);
             }}
           >
-            查看会员规则
+            {t("viewRules")}
           </div>
         </div>
       </div>
@@ -185,7 +190,7 @@ const Account = () => {
         <div className={styles["account-couses-list"]}>
           {courses.filter((item) => item.status === filterValue).length ===
           0 ? (
-            <p style={{ padding: "1rem" }}>暂无记录</p>
+            <p style={{ padding: "1rem" }}>{t("noRecord")}</p>
           ) : (
             courses
               .filter((item) => item.status === filterValue)
@@ -193,7 +198,7 @@ const Account = () => {
                 <div className={styles["course-card"]} key={item.booking_id}>
                   <img
                     src="/assets/gallery1.jpg"
-                    alt="课程背景"
+                    alt="course background"
                     className={styles["course-bg"]}
                   />
                   <div className={styles["course-overlay"]}>
@@ -201,13 +206,14 @@ const Account = () => {
                       {item.course_name}
                     </h3>
                     <p className={styles["course-info"]}>
-                      {item.coach}老师 ｜ {item.location}
+                      {item.coach} ｜ {item.location}
                     </p>
                     <p className={styles["course-duration"]}>
-                      课程时长 <strong>{item.duration}</strong> 分钟
+                      {t("courseDuration")} <strong>{item.duration}</strong>{" "}
+                      {t("minutesUnit")}
                     </p>
                     <p className={styles["course-difficulty"]}>
-                      课程难度{" "}
+                      {t("courseDifficulty")}{" "}
                       {[1, 2, 3, 4, 5].map((star) => (
                         <span
                           key={star}
@@ -222,27 +228,16 @@ const Account = () => {
                       ))}
                     </p>
                     <p className={styles["course-duration"]}>
-                      预约人数 <strong>{item.head_count}</strong> 人
+                      {t("bookingHeadCount")} <strong>{item.head_count}</strong>{" "}
+                      {t("peopleUnit")}
                     </p>
                     {/* 根据预约状态渲染按钮或标签 */}
-                    {item.status === "booked" ? (
-                      <button
-                        className={styles["book-button"]}
-                        onClick={() => handleDetail(item.course_id)}
-                      >
-                        查看课程
-                      </button>
-                    ) : (
-                      <>
-                        {/*  <div className={styles["course-tag"]}>
-                         {item.status === "attended"
-                           ? "已上课"
-                           : item.status === "cancelled"
-                           ? "已取消"
-                           : "已缺席"}
-                       </div> */}
-                      </>
-                    )}
+                    <button
+                      className={styles["book-button"]}
+                      onClick={() => handleDetail(item.course_id)}
+                    >
+                      {t("viewCourse")}
+                    </button>
                   </div>
                 </div>
               ))
@@ -259,12 +254,7 @@ const Account = () => {
         <div className={styles["rule-overlay"]}>
           <div className={styles["rule-container"]}>
             <span className={styles["rule-text"]}>
-              会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
-              会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
-              会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
-              会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
-              会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,
-              会员规则, 会员规则, 会员规则, 会员规则, 会员规则, 会员规则,{" "}
+              {t("rulesContent")}{" "}
             </span>
             <button
               className={styles["close-rule-button"]}

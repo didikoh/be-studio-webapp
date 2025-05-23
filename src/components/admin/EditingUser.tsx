@@ -52,7 +52,18 @@ const EditingUser = ({
     }
   };
 
-  const handleDelete = () => {};
+  const handleDelete = async () => {
+    await axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}admin/delete-user.php`, {
+        phone: editingUser.phone,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          setRefresh((prev: any) => prev + 1);
+          setEditingUser(null);
+        }
+      });
+  };
 
   const handleChangePassword = () => {
     if (newPassword.length < 8) {

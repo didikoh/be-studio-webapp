@@ -6,8 +6,10 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import PhoneInput from "react-phone-number-input/input";
 import axios from "axios";
 import { CgClose } from "react-icons/cg";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
+  const { t } = useTranslation("login");
   const navigate = useNavigate();
   const { setUser, setSelectedPage } = useAppContext();
 
@@ -21,28 +23,24 @@ const Login = () => {
     e.preventDefault();
 
     if (!isValidPhoneNumber(phone)) {
-      alert("请输入正确的电话号码！");
+      alert(t("validatePhone"));
       return;
     }
 
     if (password.length < 8) {
-      alert("密码至少8位，请重新输入");
+      alert(t("validatePassword"));
       return;
     }
 
-    console.log("登录提交：", { phone, password });
-
-    const formData = new FormData();
-    formData.append("phone", phone);
-    formData.append("password", password);
+    const formData = {
+      phone,
+      password,
+    };
 
     try {
       const res = await axios.post(`${baseUrl}auth-login.php`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true, // ✅ 必须加这个，才能存 session
       });
-
-      console.log(res.data);
 
       if (res.data.success) {
         setUser(res.data.profile);
@@ -58,7 +56,7 @@ const Login = () => {
   return (
     <div className={styles["login-container"]}>
       <div className={styles["login-content"]}>
-        <h1 className={styles["login-title"]}>登录 be studio</h1>
+        <h1 className={styles["login-title"]}>{t("title")}</h1>
         <button
           className={styles.closeBtn}
           onClick={() => {
@@ -71,7 +69,7 @@ const Login = () => {
         {error && <div className={styles["login-error"]}>{error}</div>}
         <form onSubmit={handleLogin} className={styles["login-form"]}>
           <PhoneInput
-            placeholder="电话号码"
+            placeholder={t("phone")}
             defaultCountry="MY"
             value={phone}
             onChange={(value) => setPhone(value || "")}
@@ -81,7 +79,7 @@ const Login = () => {
           <div className={styles["form-bottom-row"]}>
             <input
               type="password"
-              placeholder="密码 "
+              placeholder={t("password")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={styles["login-input"]}
@@ -104,11 +102,11 @@ const Login = () => {
               role="button"
               tabIndex={0}
             >
-              欢迎加入我们！点此注册
+              {t("joinUs")}
             </span>
           </div>
           <button type="submit" className={styles["login-button"]}>
-            登录
+            {t("login")}
           </button>
           <div className={styles["form-bottom-row"]}>
             <span
@@ -117,7 +115,7 @@ const Login = () => {
               role="button"
               tabIndex={0}
             >
-              忘记密码？
+              {t("forgetPassword")}
             </span>
           </div>
         </form>

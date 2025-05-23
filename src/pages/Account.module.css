@@ -130,6 +130,10 @@
   text-underline-offset: 2px;
 }
 
+.frozenBalance{
+  color: #4567b7;
+}
+
 .account-stats-section {
   display: flex;
   justify-content: space-around;
@@ -217,6 +221,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  align-items: center;
 }
 
 .course-card {

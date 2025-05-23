@@ -113,6 +113,7 @@
 .register-text {
   text-decoration: underline;
   font-style: italic;
+  font-size: 1rem;
 }
 
 .remember-me {

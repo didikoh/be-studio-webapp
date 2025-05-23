@@ -24,7 +24,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res.data);
+        console.log(res.data.profile);
         setUser(res.data.profile);
         setLoading(false);
       })

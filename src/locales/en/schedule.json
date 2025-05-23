@@ -1,0 +1,11 @@
+{
+    "noCourse": "No classes on this day",
+    "alreadyBooked": "Booked",
+    "bookNow": "Book Now",
+    "bookedCount": "Bookings",
+    "regularPrice": "Regular",
+    "memberPrice": "Member",
+    "difficulty": "Difficulty",
+    "minBook": "Minimum bookings required",
+    "locationDefault": "No location assigned"
+}

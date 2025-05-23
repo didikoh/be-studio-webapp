@@ -162,7 +162,7 @@
 }
 
 .join-us {
-  border:none;
+  border: none;
   background: none;
   text-align: center;
   font-size: 2rem;
@@ -218,6 +218,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  align-items: center;
 }
 
 .courses-list {
@@ -225,6 +226,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  align-items: center;
 }
 
 .course-card {

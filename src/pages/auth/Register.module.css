@@ -71,15 +71,23 @@ input[type="file"] {
   display: none;
 }
 
-.form-row{
+.form-row {
   width: 100%;
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.show-icon{
-  position:absolute;
+.show-icon {
+  position: absolute;
   right: 10px;
   font-size: 1.2rem;
+}
+
+.text-error {
+  color: var(--error-color);
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 0 ;
 }

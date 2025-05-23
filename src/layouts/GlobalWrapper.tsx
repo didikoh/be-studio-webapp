@@ -1,9 +1,11 @@
-import  { useEffect } from "react";
+import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppContext } from "../contexts/AppContext";
 import Loading from "../components/Loading";
+import { useTranslation } from "react-i18next";
 
 const GlobalWrapper = () => {
+  const { i18n } = useTranslation();
   const { loading, user, setSelectedPage } = useAppContext();
   const navigate = useNavigate();
 
@@ -31,8 +33,19 @@ const GlobalWrapper = () => {
     }
   }, [user]);
 
+  const changeLanguage = () => {
+    if (i18n.language === "zh") {
+      i18n.changeLanguage("en");
+    } else {
+      i18n.changeLanguage("zh");
+    }
+  };
+
   return (
     <>
+      <button style={{ position: "fixed" ,zIndex:100}} onClick={() => changeLanguage()}>
+        Language
+      </button>
       {loading && <Loading />}
       <Outlet />
     </>

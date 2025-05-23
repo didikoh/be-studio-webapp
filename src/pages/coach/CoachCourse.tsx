@@ -55,7 +55,7 @@ const CoachCourse = () => {
           courses.map((course) => (
             <div className={classes["course-card"]} key={course.id}>
               <img
-                src={course.image || "./assets/gallery1.jpg"}
+                src={course.image || "./assets/gallery4.jpg"}
                 alt="课程背景"
                 className={classes["course-bg"]}
               />

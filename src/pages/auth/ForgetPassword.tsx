@@ -1,8 +1,10 @@
 import styles from "./ForgetPassword.module.css";
 import { useNavigate } from "react-router-dom";
 import { CgClose } from "react-icons/cg";
+import { useTranslation } from "react-i18next";
 
 const ForgetPassword = () => {
+  const { t } = useTranslation("login");
   const navigate = useNavigate();
 
   const handleContact = () => {
@@ -17,7 +19,7 @@ const ForgetPassword = () => {
     <div className={styles.overlay}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h3>忘记密码</h3>
+          <h3>{t("FP.title")}</h3>
           <div
             className={styles.close}
             onClick={() => {
@@ -34,7 +36,7 @@ const ForgetPassword = () => {
             handleContact();
           }}
         >
-          联络管理员
+          {t("FP.contact")}
         </button>
       </div>
     </div>
