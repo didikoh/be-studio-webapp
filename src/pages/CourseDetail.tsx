@@ -6,9 +6,12 @@ import styles from "./CourseDetail.module.css";
 import { useNavigate } from "react-router-dom";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const CourseDetail = () => {
-  const { selectedCourseId, user, prevPage, setRefreshKey } = useAppContext();
+  const { t } = useTranslation("detail");
+  const { selectedCourseId, user, prevPage, setRefreshKey, setLoading } =
+    useAppContext();
   const navigate = useNavigate();
   const [bookpopupVisible, setBookPopupVisible] = useState(false);
   const [bookPeopleCount, setBookPeopleCount] = useState(1);
@@ -19,8 +22,6 @@ const CourseDetail = () => {
 
   useEffect(() => {
     if (!selectedCourse) return;
-
-    console.log("计算总价");
     const total_price =
       user && user.package == null
         ? selectedCourse.price * bookPeopleCount
@@ -29,17 +30,16 @@ const CourseDetail = () => {
   }, [bookPeopleCount, user, selectedCourse]);
 
   useEffect(() => {
-    console.log(selectedCourseId);
     if (!selectedCourseId) {
       return;
     }
+    setLoading(true);
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}get-course-detail.php`, {
         course_id: selectedCourseId,
         student_id: user ? user.id : null, // 如果用户未登录，传 null 或不传
       })
       .then((res) => {
-        console.log(res.data);
         setSelectedCourse(res.data.course);
         if (res.data.is_booked) {
           setIsbooked(res.data.is_booked);
@@ -47,7 +47,8 @@ const CourseDetail = () => {
         if (res.data.head_count) {
           setHeadCount(res.data.head_count);
         }
-      });
+      })
+      .finally(() => setLoading(false));
   }, [selectedCourseId, user]);
 
   const handleBackButtonClick = () => {
@@ -56,27 +57,20 @@ const CourseDetail = () => {
 
   const handleBook = async () => {
     if (!user) {
-      alert("请先登录");
+      alert(t("pleaseLogin"));
       navigate("/login");
       return;
     }
 
     const availableBalance = user.balance - user.frozen_balance;
-    console.log("用户:", user);
-    console.log(
-      "可用余额:",
-      availableBalance,
-      "=",
-      user.balance,
-      user.frozen_balance
-    );
 
     if (availableBalance < totalPrice) {
-      alert("余额不足，请充值");
+      alert(t("balanceNotEnough"));
       return;
     }
 
     try {
+      setLoading(true);
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}book.php`,
         {
@@ -88,14 +82,14 @@ const CourseDetail = () => {
       );
 
       if (response.data.success) {
-        alert("预约成功");
+        alert(t("bookingSuccess"));
         setRefreshKey((prev: any) => prev + 1);
       } else {
         alert(response.data.message);
       }
+      setLoading(false);
     } catch (error) {
-      console.error("预约出错:", error);
-      alert("预约失败");
+      alert(t("bookingFailed"));
     }
   };
 
@@ -110,7 +104,7 @@ const CourseDetail = () => {
         >
           <MdArrowBack className={styles.backIcon} />
         </button>
-        <div>课程加载中...</div>
+        <div>{t("loading")}</div>
       </div>
     );
   }
@@ -126,12 +120,12 @@ const CourseDetail = () => {
         >
           <MdArrowBack className={styles.backIcon} />
         </button>
-        <div className={styles.detailHeaderText}>课程详情</div>
+        <div className={styles.detailHeaderText}>{t("courseDetail")}</div>
       </div>
       <div className={styles.detailBanner}>
         <img
           src={selectedCourse.image || "./assets/gallery1.jpg"}
-          alt="课程背景"
+          alt="course banner"
           className={styles.detailBg}
         />
       </div>
@@ -145,17 +139,17 @@ const CourseDetail = () => {
           </div>
           <div className={styles.courseMeta}>
             <div className={styles.courseMetaItem}>
-              时长
+              {t("duration")}
               <br />
               <strong>{selectedCourse.duration} min</strong>
             </div>
             <div className={styles.courseMetaItem}>
-              开课人数
+              {t("minBook")}
               <br />
               <strong>{selectedCourse.min_book}</strong>
             </div>
             <div className={styles.courseMetaItem}>
-              难度
+              {t("difficulty")}
               <br />
               <strong>{selectedCourse.difficulty} </strong>
             </div>
@@ -167,37 +161,33 @@ const CourseDetail = () => {
             <img src="/assets/Avatar/Default.webp" className={styles.avatar} />
             <div>
               <strong>{selectedCourse.coach}</strong>
-              <br />
-              教师简介
             </div>
           </div>
           <div className={styles.descRow}>
-            教室 <span>{selectedCourse.location || "暂无决定地点"}</span>
+            {t("classroom")}{" "}
+            <span>{selectedCourse.location || t("noLocation")}</span>
           </div>
           <div className={styles.descRow}>
-            简介 <span>暂无课程简介</span>
+            {t("intro")} <span>{t("noIntro")}</span>
           </div>
         </div>
         <div className={clsx(styles.detailCard, styles.details)}>
           {" "}
           <div className={styles.infoRow}>
-            上课时间：
+            {t("classTime")}
             <span>{selectedCourse.start_time}</span>
           </div>
           <div className={styles.infoRow}>
-            地点：<span>Be Studio</span>
-          </div>
-          <div className={styles.infoRow}>
-            非会员价：
+            {t("nonMemberPrice")}
             <span>RM{selectedCourse.price}</span>
           </div>
           <div className={styles.infoRow}>
-            会员价：
+            {t("memberPrice")}
             <span>RM{selectedCourse.price_m}</span>
           </div>
           {!isbooked && (
             <div className={styles.infoRow}>
-              预约人数：
+              {t("bookingCount")}
               <div className={styles.peopleCount}>
                 {user && user.package != "promotion" && (
                   <button
@@ -221,16 +211,12 @@ const CourseDetail = () => {
           )}
           {isbooked && (
             <div className={styles.infoRow}>
-              已预约人数：
+              {t("bookedCount")}
               <div className={styles.peopleCount}>
                 <span>{headCount}</span>
               </div>
             </div>
           )}
-          {/* <div className={styles.infoRow}>
-            预约备注：
-            <input placeholder="请填写备注" maxLength={200} />
-          </div> */}
         </div>
       </div>
       <div className={styles.detailFooter}>
@@ -239,33 +225,44 @@ const CourseDetail = () => {
           onClick={() => setBookPopupVisible(true)}
           disabled={isbooked}
         >
-          {isbooked ? "已预约" : "立即预约"}{" "}
+          {isbooked ? t("booked") : t("bookNow")}{" "}
         </button>
       </div>
 
       {bookpopupVisible && (
         <div className={styles.bookPopup}>
           <div className={styles.popupContent}>
-            <h2>预约课程</h2>
-            <p>课程名称: {selectedCourse.name}</p>
-            <p>时间: {selectedCourse.start_time}</p>
-            <p>人数: {bookPeopleCount} 人</p>
+            <h2>{t("popupTitle")}</h2>
             <p>
-              单价: RM{" "}
+              {t("popupCourseName")} {selectedCourse.name}
+            </p>
+            <p>
+              {t("popupTime")}
+              {selectedCourse.start_time}
+            </p>
+            <p>
+              {t("popupPeople")} {bookPeopleCount} {t("popupUnit")}
+            </p>
+            <p>
+              {t("popupUnitPrice")}{" "}
               {user?.package == null
                 ? selectedCourse.price
                 : selectedCourse.price_m}
             </p>
-            <p>总价: RM {totalPrice}</p>
+            <p>
+              {t("popupTotalPrice")} {totalPrice}
+            </p>
             <div className={styles.popupBtns}>
               <button
                 onClick={() => {
                   handleBook();
                 }}
               >
-                确认
+                {t("popupConfirm")}
               </button>
-              <button onClick={() => setBookPopupVisible(false)}>关闭</button>
+              <button onClick={() => setBookPopupVisible(false)}>
+                {t("popupClose")}
+              </button>
             </div>
           </div>
         </div>

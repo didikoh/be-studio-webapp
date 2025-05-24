@@ -6,11 +6,15 @@ import login_en from "./locales/en/login.json";
 import home_en from "./locales/en/home.json";
 import schedule_en from "./locales/en/schedule.json";
 import account_en from "./locales/en/account.json";
+import nav_en from "./locales/en/nav.json";
+import detail_en from "./locales/en/detail.json";
 
 import login_zh from "./locales/zh/login.json";
 import home_zh from "./locales/zh/home.json";
 import schedule_zh from "./locales/zh/schedule.json";
 import account_zh from "./locales/zh/account.json";
+import nav_zh from "./locales/zh/nav.json";
+import detail_zh from "./locales/zh/detail.json";
 
 // 定义所有命名空间
 const resources = {
@@ -19,12 +23,17 @@ const resources = {
     home: home_en,
     schedule: schedule_en,
     account: account_en,
+    nav: nav_en,
+    detail:detail_en
+
   },
   zh: {
     login: login_zh,
     home: home_zh,
     schedule: schedule_zh,
     account: account_zh,
+    nav: nav_zh,
+    detail:detail_zh
   },
 };
 
@@ -34,7 +43,7 @@ i18n
   .init({
     resources,
     fallbackLng: "en", // 检测不到时默认英语
-    ns: ["login", "home", "schedule", "account"], // 声明所有命名空间
+    ns: ["login", "home", "schedule", "account", "nav","detail"], // 声明所有命名空间
     defaultNS: "home", // 默认namespace
     interpolation: { escapeValue: false },
     detection: {

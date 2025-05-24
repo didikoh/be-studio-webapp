@@ -7,22 +7,27 @@ import styles from "./CoachAccount.module.css";
 import { PiPen } from "react-icons/pi";
 import AccountSetting from "../../components/AccountSetting";
 import clsx from "clsx";
-import { coach_rules } from "../../assets/rules/rule";
+import { coach_rules_zh, coach_rules_en } from "../../assets/rules/rule";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const CoachAccount = () => {
-  const { user, logout, setPrevPage, setSelectedCourseId } = useAppContext();
+  const { t, i18n } = useTranslation("account");
+  const { user, logout, setPrevPage, setSelectedCourseId, setLoading } =
+    useAppContext();
   const navigate = useNavigate();
   const [filterValue, setFilterValue] = useState("0");
   const [ruleOpen, setRuleOpen] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
   const [courses, setCourses] = useState<any[]>([]);
+  const [classCountThisMonth, setClassCountThisMonth] = useState(0);
+  const [studentCountThisMonth, setStudentCountThisMonth] = useState(0);
 
   const filters = [
-    { name: "已排程", value: "0" },
-    { name: "已收款", value: "1" },
-    { name: "进行中", value: "2" },
-    { name: "已完成", value: "3" },
+    { name: t("coach.scheduled"), value: "0" },
+    { name: t("coach.paid"), value: "1" },
+    { name: t("completed"), value: "2" },
+    { name: t("cancelled"), value: "-1" },
   ];
 
   const handleDetail = (course_id: any) => {
@@ -32,18 +37,21 @@ const CoachAccount = () => {
   };
 
   useEffect(() => {
-    console.log(user);
     if (!user) {
       return;
     }
+    setLoading(true);
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}coach/coach-get-course.php`, {
         user_id: user.id,
       })
       .then((res) => {
         setCourses(res.data.courses);
-        console.log(res.data);
-      });
+        setClassCountThisMonth(res.data.classCountThisMonth);
+        setStudentCountThisMonth(res.data.studentCountThisMonth);
+      })
+      .catch((err) => alert("Error： " + err))
+      .finally(() => setLoading(false));
   }, [user]);
 
   if (!user) {
@@ -52,9 +60,9 @@ const CoachAccount = () => {
         className={clsx(styles["account-container"], styles["not-logged-in"])}
       >
         <div className={styles["account-box"]}>
-          <p>尚未登录</p>
+          <p>{t("notLoggedIn")}</p>
           <Link to="/login" className={styles["login-link"]}>
-            去登录
+            {t("login")}
           </Link>
         </div>
       </div>
@@ -86,7 +94,6 @@ const CoachAccount = () => {
           <button
             className={styles["account-dashboard-btn"]}
             onClick={() => {
-              console.log(settingOpen);
               setSettingOpen(true);
             }}
           >
@@ -105,12 +112,16 @@ const CoachAccount = () => {
 
       <div className={styles["account-stats-section"]}>
         <div className={styles["stat-item"]}>
-          <div className={styles["stat-label"]}>本月课堂数</div>
-          <div className={styles["stat-value"]}>10</div>
+          <div className={styles["stat-label"]}>
+            {t("coach.classCountThisMonth")}
+          </div>
+          <div className={styles["stat-value"]}>{classCountThisMonth}</div>
         </div>
         <div className={clsx(styles["stat-item"], styles["right"])}>
-          <div className={styles["stat-label"]}>本月学生人数</div>
-          <div className={styles["stat-value"]}>200</div>
+          <div className={styles["stat-label"]}>
+            {t("coach.studentCountThisMonth")}
+          </div>
+          <div className={styles["stat-value"]}>{studentCountThisMonth}</div>
         </div>
       </div>
 
@@ -122,7 +133,7 @@ const CoachAccount = () => {
               setRuleOpen(true);
             }}
           >
-            查看教师规则
+            {t("coach.viewCoachRules")}
           </div>
         </div>
       </div>
@@ -143,54 +154,61 @@ const CoachAccount = () => {
           ))}
         </div>
         <div className={styles["account-couses-list"]}>
-          {courses.filter((item) => item.state == filterValue).length === 0 ? (
-            <p style={{ padding: "1rem" }}>暂无记录</p>
-          ) : (
-            courses
-              .filter((item) => item.state == filterValue)
-              .map((item: any) => (
-                <div className={styles["course-card"]} key={item.id}>
-                  <img
-                    src="/assets/gallery1.jpg"
-                    alt="课程背景"
-                    className={styles["course-bg"]}
-                  />
-                  <div className={styles["course-overlay"]}>
-                    <h3 className={styles["course-title"]}>{item.name}</h3>
-                    <p className={styles["course-info"]}>
-                      {item.coach}老师 ｜ {item.location}
-                    </p>
-                    <p className={styles["course-duration"]}>
-                      课程时长 <strong>{item.duration}</strong> 分钟
-                    </p>
-                    <p className={styles["course-difficulty"]}>
-                      课程难度{" "}
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <span
-                          key={star}
-                          className={
-                            star <= item.difficulty
-                              ? styles["star-filled"]
-                              : styles["star"]
-                          }
-                        >
-                          ★
-                        </span>
-                      ))}
-                    </p>
-                    <p className={styles["course-duration"]}>
-                      预约人数 <strong>{item.booking_count}</strong> 人
-                    </p>
-                    {/* 根据预约状态渲染按钮或标签 */}
-                    <button
-                      className={styles["book-button"]}
-                      onClick={() => handleDetail(item.id)}
-                    >
-                      查看课程
-                    </button>
+          {Array.isArray(courses) && courses.length > 0 ? (
+            courses.filter((item) => item.state == filterValue).length === 0 ? (
+              <p style={{ padding: "1rem" }}>{t("noRecord")}</p>
+            ) : (
+              courses
+                .filter((item) => item.state == filterValue)
+                .map((item: any) => (
+                  <div className={styles["course-card"]} key={item.id}>
+                    <img
+                      src="/assets/gallery1.jpg"
+                      alt="course background"
+                      className={styles["course-bg"]}
+                    />
+                    <div className={styles["course-overlay"]}>
+                      <h3 className={styles["course-title"]}>{item.name}</h3>
+                      <p className={styles["course-info"]}>
+                        {item.coach} ｜ {item.location}
+                      </p>
+                      <p className={styles["course-duration"]}>
+                        {t("courseDuration")} <strong>{item.duration}</strong>{" "}
+                        {t("minutesUnit")}
+                      </p>
+                      <p className={styles["course-difficulty"]}>
+                        {t("courseDifficulty")}{" "}
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <span
+                            key={star}
+                            className={
+                              star <= item.difficulty
+                                ? styles["star-filled"]
+                                : styles["star"]
+                            }
+                          >
+                            ★
+                          </span>
+                        ))}
+                      </p>
+                      <p className={styles["course-duration"]}>
+                        {t("bookingHeadCount")}{" "}
+                        <strong>{item.booking_count}</strong>
+                        {t("peopleUnit")}
+                      </p>
+                      {/* 根据预约状态渲染按钮或标签 */}
+                      <button
+                        className={styles["book-button"]}
+                        onClick={() => handleDetail(item.id)}
+                      >
+                        {t("viewCourse")}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))
+                ))
+            )
+          ) : (
+            <p style={{ padding: "1rem" }}>{t("noRecord")}</p>
           )}
         </div>
       </div>
@@ -198,12 +216,33 @@ const CoachAccount = () => {
       <div className={styles["footer-text"]}>
         Be Studio 2025 All Rights Reserved
         <br />
+        <a
+          href="https://bestudiobp.com/be-rule/tnc.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: "underline", marginRight: 12 }}
+          className={styles["footer-text"]}
+        >
+          Privacy Policy
+        </a>
+        <a
+          href="https://bestudiobp.com/be-rule/privacy.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: "underline" }}
+          className={styles["footer-text"]}
+        >
+          T&amp;C
+        </a>
       </div>
 
       {ruleOpen && (
         <div className={styles["rule-overlay"]}>
           <div className={styles["rule-container"]}>
-            <span className={styles["rule-text"]}>{coach_rules}</span>
+            <span className={styles["rule-text"]}>
+              {" "}
+              {i18n.language.startsWith("zh") ? coach_rules_zh : coach_rules_en}
+            </span>
             <button
               className={styles["close-rule-button"]}
               onClick={() => setRuleOpen(false)}

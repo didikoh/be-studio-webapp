@@ -16,6 +16,7 @@ const EditingUser = ({
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [changePasswordMode, setChangePasswordMode] = useState(false);
   const [newPassword, setNewPassword] = useState("");
+  const [newPassword2, setNewPassword2] = useState("");
 
   useEffect(() => {
     console.log(editingUser);
@@ -68,6 +69,11 @@ const EditingUser = ({
   const handleChangePassword = () => {
     if (newPassword.length < 8) {
       alert("密码至少8位");
+      return;
+    }
+
+    if (newPassword !== newPassword2) {
+      alert("两次密码不一致");
       return;
     }
 
@@ -180,6 +186,17 @@ const EditingUser = ({
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="输入新密码（至少8位）"
+                required
+              />
+            </div>
+            <div className={styles["edit-row"]}>
+              <label>确认密码:</label>
+              <input
+                type="password"
+                className={styles["form-input"]}
+                value={newPassword2}
+                onChange={(e) => setNewPassword2(e.target.value)}
+                placeholder="确认密码（至少8位）"
                 required
               />
             </div>

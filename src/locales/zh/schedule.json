@@ -7,5 +7,9 @@
     "memberPrice": "会员价",
     "difficulty": "课程难度",
     "minBook": "需开班人数",
-    "locationDefault": "暂无课室"
+    "locationDefault": "暂无课室",
+    "coach":{
+        "title":"我的课程",
+        "view":"查看课程"
+    }
 }

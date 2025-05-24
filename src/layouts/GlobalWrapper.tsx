@@ -19,8 +19,8 @@ const GlobalWrapper = () => {
           console.log("admin_home");
           break;
         case "coach":
-          setSelectedPage("coach_course");
-          navigate("/coach_course");
+          setSelectedPage("coach_schedule");
+          navigate("/coach_schedule");
           break;
         case "student":
           setSelectedPage("account");

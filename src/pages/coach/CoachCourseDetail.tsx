@@ -7,7 +7,7 @@ import axios from "axios";
 import styles from "./CoachCourseDetail.module.css";
 
 const CoachCourseDetail = () => {
-  const { user, selectedCourseId, prevPage } = useAppContext();
+  const { user, selectedCourseId, prevPage, setSelectedPage } = useAppContext();
   const navigate = useNavigate();
   const [bookPopupVisible, setBookPopupVisible] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<any>(null);
@@ -248,7 +248,8 @@ const CoachCourseDetail = () => {
           <button
             className={styles.detailBookButton}
             onClick={() => {
-              navigate("/coach_course");
+              navigate("/coach_schedule");
+              setSelectedPage("coach_schedule");
             }}
           >
             返回课程表

@@ -18,11 +18,12 @@ const Account = () => {
   const [ruleOpen, setRuleOpen] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
   const [courses, setCourses] = useState<any[]>([]);
+  const [totalMinutes, setTotalMinutes] = useState(0);
 
   const filters = [
     { name: t("booked"), value: "booked" },
     { name: t("paid"), value: "paid" },
-    { name: t("ongoing"), value: "ongoing" },
+    { name: t("cancelled"), value: "cancelled" },
     { name: t("completed"), value: "completed" },
   ];
 
@@ -48,6 +49,7 @@ const Account = () => {
       })
       .then((res) => {
         setCourses(res.data.bookings);
+        setTotalMinutes(res.data.total_minutes);
       });
   }, [user]);
 
@@ -153,7 +155,15 @@ const Account = () => {
         <div className={clsx(styles["stat-item"], styles["right"])}>
           <div className={styles["stat-label"]}>{t("studyThisWeek")}</div>
           <div className={styles["stat-value"]}>
-            {`0 `} {t("minutes")}
+            {Math.floor(totalMinutes / 60) > 0
+              ? `${Math.floor(totalMinutes / 60)} ${t("hours")}`
+              : ""}
+            {totalMinutes % 60 > 0
+              ? `${totalMinutes % 60} ${t("minutes")}`
+              : Math.floor(totalMinutes / 60) === 0
+              ? `0 ${t("minutes")}`
+              : ""}
+            {}
           </div>
         </div>
       </div>
@@ -248,14 +258,30 @@ const Account = () => {
       <div className={styles["footer-text"]}>
         Be Studio 2025 All Rights Reserved
         <br />
+        <a
+          href="https://bestudiobp.com/be-rule/tnc.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: "underline", marginRight: 12 }}
+          className={styles["footer-text"]}
+        >
+          Privacy Policy
+        </a>
+        <a
+          href="https://bestudiobp.com/be-rule/privacy.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: "underline" }}
+          className={styles["footer-text"]}
+        >
+          T&amp;C
+        </a>
       </div>
 
       {ruleOpen && (
         <div className={styles["rule-overlay"]}>
           <div className={styles["rule-container"]}>
-            <span className={styles["rule-text"]}>
-              {t("rulesContent")}{" "}
-            </span>
+            <span className={styles["rule-text"]}>{t("rulesContent")} </span>
             <button
               className={styles["close-rule-button"]}
               onClick={() => setRuleOpen(false)}

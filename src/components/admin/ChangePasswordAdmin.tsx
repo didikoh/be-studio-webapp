@@ -19,9 +19,6 @@ const ChangePassword = () => {
       // phone,
       newPassword,
     });
-
-    // 提交后跳转或发请求
-    alert("注册成功（模拟）！");
     navigate("/login");
   };
 

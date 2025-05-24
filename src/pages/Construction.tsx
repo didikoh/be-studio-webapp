@@ -12,8 +12,8 @@ const Construction = () => {
         setSelectedPage("home");
         break;
       case "coach":
-        navigate("/coach_course");
-        setSelectedPage("coach_course");
+        navigate("/coach_schedule");
+        setSelectedPage("coach_schedule");
         break;
       default:
         navigate("/Home");

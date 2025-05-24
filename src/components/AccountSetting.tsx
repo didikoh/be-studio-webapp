@@ -1,15 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CgClose } from "react-icons/cg";
 import styles from "./AccountSetting.module.css";
 import axios from "axios";
 import { useAppContext } from "../contexts/AppContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
 
 const AccountSetting = ({ setSettingOpen }: any) => {
+  const { t } = useTranslation("account");
   const { user, setRefreshKey, logout, setLoading } = useAppContext();
   // 定义表单状态
   const [name, setName] = useState(user.name || "");
-  const [birthday, setBirthday] = useState(user.birthday || "");
+  const [birthday, setBirthday] = useState<Date | null>(
+    user.birthday ? new Date(user.birthday) : null
+  );
+
   const [profilePic, setProfilePic] = useState<File | null>(null);
   const [passwordOld, setPasswordOld] = useState("");
   const [passwordNew, setPasswordNew] = useState("");
@@ -30,7 +37,10 @@ const AccountSetting = ({ setSettingOpen }: any) => {
 
     const formData = new FormData();
     formData.append("name", name);
-    formData.append("birthday", birthday);
+    formData.append(
+      "birthday",
+      birthday ? birthday.toISOString().slice(0, 10) : ""
+    );
     formData.append("phone", user.phone);
     formData.append("action", "edit");
     formData.append("role", user.role);
@@ -51,23 +61,25 @@ const AccountSetting = ({ setSettingOpen }: any) => {
         setSettingOpen(false);
         setRefreshKey((prev: any) => prev + 1);
       } else {
-        setResponseMsg(res?.data?.message || "网络错误");
+        setResponseMsg(res?.data?.message || t("accountSetting.networkError"));
       }
     } catch (err: any) {
       console.error(err);
-      setResponseMsg(err.response?.data?.message || "网络错误");
+      setResponseMsg(
+        err.response?.data?.message || t("accountSetting.networkError")
+      );
     }
   };
 
   const handleSubmitPassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (passwordOld.length < 8 || passwordNew.length < 8) {
-      alert("密码至少8位，请重新输入");
+      alert(t("accountSetting.passwordTooShort"));
       return;
     }
 
     if (passwordNew !== passwordNew2) {
-      alert("两次新密码不一致，请重新输入");
+      alert(t("accountSetting.passwordMismatch"));
       return;
     }
 
@@ -84,27 +96,36 @@ const AccountSetting = ({ setSettingOpen }: any) => {
       });
 
       if (res.data.success) {
-        alert("密码修改成功");
+        alert(t("accountSetting.passwordChangeSuccess"));
         logout();
       } else {
-        setResponseMsg(res?.data?.message || "网络错误");
+        setResponseMsg(res?.data?.message || t("accountSetting.networkError"));
       }
     } catch (err: any) {
       console.error(err);
-      setResponseMsg(err.response?.data?.message || "网络错误");
+      setResponseMsg(
+        err.response?.data?.message || t("accountSetting.networkError")
+      );
     }
   };
+
   return (
     <div className={styles.overlay}>
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles["header-left"]}>
-            <h3>{changePassword ? "更改密码" : "编辑资料"}</h3>
+            <h3>
+              {changePassword
+                ? t("accountSetting.changePassword")
+                : t("accountSetting.editProfile")}
+            </h3>
             <div
               className={styles["change-form"]}
               onClick={() => setChangePassword(!changePassword)}
             >
-              {changePassword ? "编辑资料" : "更改密码"}
+              {changePassword
+                ? t("accountSetting.editProfile")
+                : t("accountSetting.changePassword")}
             </div>
           </div>
           <div
@@ -121,23 +142,23 @@ const AccountSetting = ({ setSettingOpen }: any) => {
           <form className={styles.form} onSubmit={handleSubmitEdit}>
             <input
               type="text"
-              placeholder="名字"
+              placeholder={t("accountSetting.namePlaceholder")}
               value={name}
               onChange={(e) => setName(e.target.value)}
               className={styles["form-input"]}
               required
             />
 
-            <input
-              type="text"
-              placeholder="生日"
-              value={birthday}
-              onFocus={(e) => (e.target.type = "date")}
-              onBlur={(e) => {
-                if (!e.target.value) e.target.type = "text";
-              }}
-              onChange={(e) => setBirthday(e.target.value)}
+            <DatePicker
+              selected={birthday}
+              onChange={(date: Date | null) => setBirthday(date)}
+              placeholderText={t("accountSetting.birthdayPlaceholder")}
+              dateFormat="yyyy-MM-dd"
               className={styles["form-input"]}
+              maxDate={new Date()} // 生日最大为今天
+              showYearDropdown
+              scrollableYearDropdown
+              yearDropdownItemNumber={100}
               required
             />
 
@@ -154,19 +175,21 @@ const AccountSetting = ({ setSettingOpen }: any) => {
 
             <input
               type="text"
-              placeholder="上传头像（可选）"
+              placeholder={t(
+                "accountSetting.uploadAvatarPlaceholder"
+              )}
               defaultValue={profilePic ? profilePic.name : ""}
               onClick={() => fileInputRef.current?.click()}
               className={styles["form-input"]}
             />
-            <button type="submit">提交</button>
+            <button type="submit">{t("accountSetting.submit")}</button>
           </form>
         ) : (
           <form className={styles.form} onSubmit={handleSubmitPassword}>
             <div className={styles["form-row"]}>
               <input
                 type={show ? "text" : "password"}
-                placeholder="旧密码"
+                placeholder={t("accountSetting.oldPasswordPlaceholder")}
                 value={passwordOld}
                 onChange={(e) => setPasswordOld(e.target.value)}
                 className={styles["form-input"]}
@@ -181,7 +204,7 @@ const AccountSetting = ({ setSettingOpen }: any) => {
             <div className={styles["form-row"]}>
               <input
                 type={show2 ? "text" : "password"}
-                placeholder="新密码"
+                placeholder={t("accountSetting.newPasswordPlaceholder")}
                 value={passwordNew}
                 onChange={(e) => setPasswordNew(e.target.value)}
                 className={styles["form-input"]}
@@ -196,7 +219,7 @@ const AccountSetting = ({ setSettingOpen }: any) => {
             <div className={styles["form-row"]}>
               <input
                 type={show3 ? "text" : "password"}
-                placeholder="确认新密码"
+                placeholder={t("accountSetting.confirmNewPasswordPlaceholder")}
                 value={passwordNew2}
                 onChange={(e) => setPasswordNew2(e.target.value)}
                 className={styles["form-input"]}
@@ -208,7 +231,7 @@ const AccountSetting = ({ setSettingOpen }: any) => {
               />
             </div>
 
-            <button type="submit">提交</button>
+            <button type="submit">{t("accountSetting.submit")}</button>
           </form>
         )}
         {responseMsg && <p className={styles["response-msg"]}>{responseMsg}</p>}

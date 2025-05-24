@@ -1,10 +1,12 @@
-import classes from "./CoachCourse.module.css";
+import classes from "./CoachSchedule.module.css";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../contexts/AppContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
-const CoachCourse = () => {
+const CoachSchedule = () => {
+  const { t } = useTranslation("schedule");
   const navigate = useNavigate();
   const { setSelectedCourseId, user, setPrevPage } = useAppContext();
   const [courses, setCourses] = useState<any[]>([]);
@@ -22,7 +24,7 @@ const CoachCourse = () => {
   }, [user]);
 
   const handleDetail = (course: any) => {
-    setPrevPage("/coach_course");
+    setPrevPage("/coach_schedule");
     setSelectedCourseId(course.id);
     navigate("/coach_coursedetail");
   };
@@ -45,7 +47,7 @@ const CoachCourse = () => {
     <div className={classes["course-container"]}>
       <div className={classes["header"]}>
         <div className={classes["header-text"]}>
-          我的课程
+          {t("coach.title")}
           <br />
           {getDateRangeString()}
         </div>
@@ -56,7 +58,7 @@ const CoachCourse = () => {
             <div className={classes["course-card"]} key={course.id}>
               <img
                 src={course.image || "./assets/gallery4.jpg"}
-                alt="课程背景"
+                alt="coach banner"
                 className={classes["course-bg"]}
               />
               <div className={classes["course-overlay"]}>
@@ -69,26 +71,26 @@ const CoachCourse = () => {
                 <div className={classes["course-info"]}>
                   <span>{course.coach}</span>
                   <span> | </span>
-                  <span>{course.location || "暂无课室"}</span>
+                  <span>{course.location || t("locationDefault")}</span>
                 </div>
                 <div className={classes["course-attend"]}>
                   <span className={classes["attend-count"]}>
-                    已预约人数：{course.booking_count}
+                    {t("bookedCount")}：{course.booking_count}
                   </span>
                 </div>
                 <div className={classes["course-attend"]}>
                   <span className={classes["attend-count"]}>
-                    普通价：RM{" " + course.price}
+                    {t("regularPrice")}：RM{" " + course.price}
                   </span>
                 </div>
                 <div className={classes["course-attend"]}>
                   <span className={classes["attend-count"]}>
-                    会员价：RM
+                    {t("memberPrice")}：RM
                     {" " + course.price_m}
                   </span>
                 </div>
                 <div className={classes["course-difficulty"]}>
-                  课程难度：
+                  {t("difficulty")}：
                   {[1, 2, 3, 4, 5].map((star) => (
                     <span
                       key={star}
@@ -104,7 +106,7 @@ const CoachCourse = () => {
                 </div>
                 <div className={classes["course-attend"]}>
                   <span className={classes["attend-count"]}>
-                    需开班人数：{course.min_book}
+                    {t("minBook")}：{course.min_book}
                   </span>
                 </div>
                 <button
@@ -113,7 +115,7 @@ const CoachCourse = () => {
                     handleDetail(course);
                   }}
                 >
-                  查看详情
+                  {t("view")}
                 </button>
               </div>
             </div>
@@ -123,4 +125,4 @@ const CoachCourse = () => {
   );
 };
 
-export default CoachCourse;
+export default CoachSchedule;

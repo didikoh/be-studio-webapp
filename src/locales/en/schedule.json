@@ -7,5 +7,9 @@
     "memberPrice": "Member",
     "difficulty": "Difficulty",
     "minBook": "Minimum bookings required",
-    "locationDefault": "No location assigned"
+    "locationDefault": "No location assigned",
+    "coach": {
+        "title": "My Courses",
+        "view": "VIEW"
+    }
 }

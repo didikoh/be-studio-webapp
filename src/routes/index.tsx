@@ -7,7 +7,7 @@ import CourseDetail from "../pages/CourseDetail";
 import Account from "../pages/Account";
 import Schedule from "../pages/Schedule";
 import Construction from "../pages/Construction";
-import CoachCourse from "../pages/coach/CoachCourse";
+import CoachSchedule from "../pages/coach/CoachSchedule";
 import CoachCourseDetail from "../pages/coach/CoachCourseDetail";
 import CoachAccount from "../pages/coach/CoachAccount";
 // import CoachSite from "../pages/coach/CoachSite";
@@ -42,7 +42,7 @@ export const router = createBrowserRouter([
           { path: "/schedule", element: <Schedule /> },
           { path: "/account", element: <Account /> },
           // { path: "/event", element: <Events /> },
-          { path: "/coach_course", element: <CoachCourse /> },
+          { path: "/coach_schedule", element: <CoachSchedule /> },
           // { path: "/coach_site", element: <CoachSite /> },
           { path: "/coach_account", element: <CoachAccount /> },
           { path: "/admin_account", element: <AdminAccount /> },
